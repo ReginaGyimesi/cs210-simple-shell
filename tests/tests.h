@@ -7,10 +7,6 @@
 
 #endif //CS210_SIMPLE_SHELL_TESTS_H
 
-//
-// Created by zkiss on 27/01/2021.
-//
-
 #include <stdlib.h>
 #include <stdio.h>
 #include "string.h"
