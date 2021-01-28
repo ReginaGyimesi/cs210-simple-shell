@@ -10,61 +10,22 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "string.h"
+#include "test_functions/test_init.h"
 
-#define NUMBER_OF_TESTS 2       //Increase this if you add new tests
-#define TEST_TITLE_SIZE 100
-#define FALSE 0
-#define TRUE 1
-
-struct Test{
-    int testPassed;
-    char *testName;
-};
-
-struct Test test_list[NUMBER_OF_TESTS];
+// ADD INCLUDES FROM HERE
+#include "test_functions/add_2_number_tests.h"
 
 void check_tests();
 
 int run_tests(){
     int i = 0;
+    test_list = malloc(NUMBER_OF_TESTS * sizeof(struct Test));
 
-    // Test 1 -- Add 2 positive number -------------
-    {
-        test_list[i].testName = malloc(TEST_TITLE_SIZE);
-        strcpy(test_list[i].testName, "Add 2 positive number");
-
-        int result = 13;
-        int a = 5;
-        int b = 8;
-        if(result == add_2_int_number(a,b)){
-            test_list[i].testPassed = TRUE;
-        }
-        else{
-            test_list[i].testPassed = FALSE;
-        }
-
-        i++;
-    }
-
-    // Test 2 -- Add 2 negative number -------------
-    {
-        test_list[i].testName = malloc(TEST_TITLE_SIZE);
-        strcpy(test_list[i].testName, "Add 2 negative number");
-
-        int result = -3;
-        int a = 5;
-        int b = -8;
-        if(result == add_2_int_number(a,b)){
-            test_list[i].testPassed = TRUE;
-        }
-        else{
-            test_list[i].testPassed = FALSE;
-        }
-
-        i++;
-    }
+    // ADD DRIVER FUNCTIONS FROM HERE
+    run_add_2_number_tests(test_list, &i);
 
 
+    // STOP HERE pls
     check_tests();
 
     return 0;

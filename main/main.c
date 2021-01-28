@@ -7,7 +7,7 @@
 
 int main(int argc, char *argv[]){
 
-    testing(FALSE);     //Set it to TRUE if you want to run every test
+    testing(TRUE);     //Set it to TRUE if you want to run every test
 
     int a;
     int b;
