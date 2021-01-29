@@ -18,3 +18,6 @@ struct Test{
 };
 
 struct Test *test_list;
+
+void check_tests();
+void free_tests();
