@@ -5,20 +5,18 @@
 #include <stdio.h>
 #include <main.h>
 
-void sh_loop(void)
+void main()
 {
+    testing(TRUE); //CHANGE THIS TO RUN TESTS OR NOT
+
     char *line;
     char **args;
     int status;
 
     do {
-        printf("> ");
-        line = sh_read_line();
-        args = sh_split_line(line);
-        status = sh_execute(args);
+        // READ USER INPUT line = function_to_read();
+        status = 0;
 
-        free(line);
-        free(args);
     } while (status);
 }
 
