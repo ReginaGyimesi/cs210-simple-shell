@@ -5,24 +5,21 @@
 #include <stdio.h>
 #include <main.h>
 
-int main(int argc, char *argv[]){
+void sh_loop(void)
+{
+    char *line;
+    char **args;
+    int status;
 
-    testing(TRUE);     //Set it to TRUE if you want to run every test
+    do {
+        printf("> ");
+        line = sh_read_line();
+        args = sh_split_line(line);
+        status = sh_execute(args);
 
-    int a;
-    int b;
-
-    printf("Give 1. number: ");
-    scanf("%d", &a);
-
-    printf("Give 2. number: ");
-    scanf("%d", &b);
-
-    int result = add_2_int_number(a, b);
-
-    printf("Result is %d", result);
-
-    return 0;
+        free(line);
+        free(args);
+    } while (status);
 }
 
 void testing(int run_every_test){

@@ -10,4 +10,5 @@
 #include "functions/add_2_number.h"
 #include "tests/tests.h"
 
+void sh_loop(void);
 void testing();
