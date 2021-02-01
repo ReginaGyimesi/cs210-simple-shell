@@ -5,19 +5,38 @@
 #include <stdio.h>
 #include <main.h>
 
-void main()
+int main()
 {
-    testing(TRUE); //CHANGE THIS TO RUN TESTS OR NOT
+    testing(FALSE); //CHANGE THIS TO RUN TESTS OR NOT
 
     char *line;
     char **args;
     int status;
 
     do {
-        // READ USER INPUT line = function_to_read();
-        status = 0;
+
+        print_prompt();
+        line = read_input();
+
+        printf("User input: ");
+        printf("%s", line);
+        printf("\n");
+
+        args = tokenise(line);
+
+        printf("Every argument:\n");
+        for(int i = 0; args[i] != NULL; ++i){
+            printf("%d. argument: ", i);
+            printf("%s\n", args[i]);
+        }
+
+        status = apply_command(args);
+        printf("Result status = %d\n", status);
+
 
     } while (status);
+
+    return 0;
 }
 
 void testing(int run_every_test){
