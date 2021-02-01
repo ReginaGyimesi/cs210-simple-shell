@@ -28,7 +28,6 @@ char** tokenise(char* input) {
 	int prev_is_delim = 1;
 	
 	while (*current != '\0') {
-		printf("(%c)\n", *current);
 		if (*current == ' ') {
 			prev_is_delim = 1;
 			*current = '\0';
