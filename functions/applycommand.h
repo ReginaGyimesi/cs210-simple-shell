@@ -17,7 +17,7 @@ int apply_command(char** tokens) {
     }
     char *inbuilt[] = {"exit", "^Z", "^D"}; //an array where we store our non-linux commands
     // so far only exit but will grow later
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 3; ++i) {
         if (strcmp(tokens[0], inbuilt[i]) == 0) //checking if the input is an inbuilt function and returning the
             return 0;                        // the index if it
     }
