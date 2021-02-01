@@ -25,7 +25,7 @@ int main()
         args = tokenise(line);
 
         printf("Every argument:\n");
-        for(int i = 0; args[i] != NULL; ++i){
+        for(int i = 0; args != NULL && args[i] != NULL; ++i){
             printf("%d. argument: ", i);
             printf("%s\n", args[i]);
         }
