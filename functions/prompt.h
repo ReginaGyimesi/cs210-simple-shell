@@ -3,8 +3,6 @@
 // Created by Eamonn McClay on 28/01/2021.
 //
 
-#include <string.h>
-
 // Displays a welcome message.
 int welcome() {
   printf("CS210 Group 5 Simple Shell\n");
@@ -23,10 +21,12 @@ char* read_input() {
   fgets(input, 517, stdin);
 
   if(strlen(input) == 516) {
-    return "Input exceeds limit of 512 characters.\n";
+      printf("Input exceeds limit of 512 characters.\n");
+      return NULL;
   }
   else if (strlen(input) == 1) {
-    return "Please enter a command.\n";
+      printf("Please enter a command.\n");
+      return NULL;
   }
   else {
     return input;
