@@ -9,6 +9,10 @@
 
 char** tokenise(char* input) {
 
+    if(input == NULL){
+        return NULL;
+    }
+
     char delimiters[DELIMITER_SIZE] = {' ', '\t', '|', '>', '<', '&', ';', '\n'};
     int n_token = 1;
     char* current = input;
