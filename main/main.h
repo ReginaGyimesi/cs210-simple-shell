@@ -8,6 +8,7 @@
 #endif //CS210_SIMPLE_SHELL_MAIN_H
 
 #include "functions/add_2_number.h"
+#include "functions/tokenise.h"
 #include "tests/tests.h"
 
 void sh_loop(void);
