@@ -14,6 +14,8 @@
 
 // ADD INCLUDES FROM HERE
 #include "test_functions/add_2_number_tests.h"
+#include "test_functions/applycommand_tests.h"
+#include "test_functions/tokenise_tests.h"
 
 int run_tests(){
     int i = 0;
@@ -21,7 +23,8 @@ int run_tests(){
 
     // ADD DRIVER FUNCTIONS FROM HERE
     run_add_2_number_tests(test_list, &i);
-
+    run_applycommand_tests(test_list, &i);
+    run_tokenise_tests(test_list, &i);
 
     // STOP HERE pls
     check_tests();

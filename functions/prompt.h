@@ -22,6 +22,7 @@ char* read_input() {
 
   if(strlen(input) == 516) {
       printf("Input exceeds limit of 512 characters.\n");
+      setbuf(stdin, NULL);
       return NULL;
   }
   else if (strlen(input) == 1) {

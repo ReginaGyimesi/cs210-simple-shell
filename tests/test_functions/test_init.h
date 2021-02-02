@@ -7,7 +7,7 @@
 
 #endif //CS210_SIMPLE_SHELL_TEST_INIT_H
 
-#define NUMBER_OF_TESTS 2       //Increase this if you add new tests
+#define NUMBER_OF_TESTS 10      //Increase this if you add new tests
 #define TEST_TITLE_SIZE 100
 #define FALSE 0
 #define TRUE 1

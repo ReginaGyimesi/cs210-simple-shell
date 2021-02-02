@@ -45,7 +45,7 @@ void add_2_negative_number(struct Test *test_list, int *i){
 
     int result = -13;
     int a = -5;
-    int b = 8;
+    int b = -8;
     if(result == add_2_int_number(a,b)){
         test_list[temp].testPassed = TRUE;
     }

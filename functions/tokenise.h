@@ -9,7 +9,7 @@
 
 char** tokenise(char* input) {
 
-    if(input == NULL){
+    if(input == NULL || input[0] == '\0'){
         return NULL;
     }
 
