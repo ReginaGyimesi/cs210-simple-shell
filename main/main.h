@@ -7,6 +7,7 @@
 
 #endif //CS210_SIMPLE_SHELL_MAIN_H
 
+#include <stdio.h>
 #include <string.h>
 
 #include "functions/add_2_number.h"
