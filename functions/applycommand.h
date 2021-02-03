@@ -12,10 +12,15 @@
 #endif //CS210_SIMPLE_SHELL_APPLYCOMMAND_H
 
 int apply_command(char** tokens) {
-    if (tokens == NULL || tokens[0] == NULL) {   //Should return 0 to close the input feed and exit the loop
+    if (tokens == NULL ) {   //if the first input is null we just return -1 cuz its gonna be an error
         return 0;
     }
-    char *inbuilt[] = {"exit",}; //an array where we store our non-linux commands
+    else if(tokens[0]=="") {
+
+        return 2;
+
+    }
+    char *inbuilt[] = {"exit", "^Z", "^D"}; //an array where we store our non-linux commands
     // so far only exit but will grow later
     for (int i = 0; i < 3; ++i) {
         if (strcmp(tokens[0], inbuilt[i]) == 0) //checking if the input is an inbuilt function and returning the
