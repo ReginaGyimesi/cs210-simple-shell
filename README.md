@@ -1,4 +1,28 @@
-﻿# Stage 1
+﻿# Stage 2
+
+## Tasks
+
+The key point for this stage is to choose an appropriate variant of exec() that will take
+into account the PATH environment parameter. Read also the manual very carefully
+about how to handle external program parameters. Remember that we should be able to
+support any number of command parameters.
+
+In order to simplify the parsing so that built-in commands can be easily added, it is a
+good idea to generate a single string array that includes all the tokens of the user input
+line. This way you can parse the user input line, in the same way, all the time
+irrespective of whether it contains built-in or external commands or the number of
+tokens it contains!
+
+To make your life even easier you can use a fixed size array, thus putting a limit on the
+number of tokens accepted. Fifty tokens will be a reasonable number here.
+
+1. Modify `tokenize.h`. Limit number of tokens to 50.
+2. Create header `execute_shell.h`, containing the proper fork function. In `applycommand.h` check if the function is inbuilt (such as exit, ^D etc...), if not call the 
+   fork function from `execute_shell.h`
+   
+3. Testing
+
+# Stage 1
 
 ## Tasks
 
