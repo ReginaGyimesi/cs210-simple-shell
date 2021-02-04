@@ -42,9 +42,9 @@ char** tokenise(char* input) {
         else if (prev_is_delim == 1) {
             prev_is_delim = 0;
             if (n_token != 20) {
-			    tokens[n_token] = current;
-				n_token ++;
-			}
+                tokens[n_token] = current;
+                n_token ++;
+            }
         }
         current ++;
     }
