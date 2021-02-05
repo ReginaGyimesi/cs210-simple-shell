@@ -1,6 +1,7 @@
 // 
 // Function to take in an input string and split it into separate tokens.
 // Returns a pointer to a null-terminated list of char pointers.
+// Will return no more than 50 tokens, as well as the null token
 // Created by Mark Oppo on 29/01/2021.
 //
 #include <stdlib.h>
@@ -17,7 +18,7 @@ char** tokenise(char* input) {
     int n_token = 1;
     char* current = input;
 
-    while (*current != '\0') {
+    while (*current != '\0' && n_token < 50) {
         for (int i = 0; i < DELIMITER_SIZE; i++) {
             if (*current == delimiters[i]) {
                 n_token ++;
@@ -33,15 +34,17 @@ char** tokenise(char* input) {
     n_token = 0;
     int prev_is_delim = 1;
 
-    while (*current != '\0') {
+    while (*current != '\0' && n_token <= 50) {
         if (*current == ' ') {
             prev_is_delim = 1;
             *current = '\0';
         }
         else if (prev_is_delim == 1) {
             prev_is_delim = 0;
-            tokens[n_token] = current;
-            n_token ++;
+            if (n_token != 20) {
+                tokens[n_token] = current;
+                n_token ++;
+            }
         }
         current ++;
     }
