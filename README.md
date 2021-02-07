@@ -1,8 +1,42 @@
-﻿# Stage 2
+﻿# Stage 3
 
 ## Tasks
-The key point for this stage is to choose an appropriate variant of exec() that will take
-into account the PATH environment parameter. Read also the manual very carefully
+For this stage, we are only interested in two things from the environment the HOME –
+the user’s home directory, and the PATH – the list of directories within which the shell
+looks for executable programs.
+
+1. Create String variable which stores the original PATH on startup, using `getenv()`. On exit set `PATH` back to the original value. Include it into `main.c`.
+2. Change current C directory to `HOME` directory on startup. Call `getenv("HOME")` and `chdir()`. Check if this happened correctly by calling `getcwd()`, if not
+   print out error message. Include it into `main.c`. 
+3. Create 2 built-in commands: `getpath` & `setpath` methods. *Create a new `path.h` in `functions` folder.* The first - `getpath` - just gets and prints
+   the `PATH` value. The second - `setpath` - takes a path (string of a colon-separated list of directories) as a parameter and makes it the value of `PATH`.
+   Use `getenv()` & `setenv()` to achieve this. Your shell should also check appropriate parameters are provided by the user and print  
+   informative error messages when this is not the case. Note that there are no constraints
+   on the format of the path placed by the environment.
+4. Add these built-in commands into `applycommand.h`. (How? is up for discussion)
+5. Testing
+
+## How to add a new function to the code
+1. Add a new `my_function.h` to the "functions" folder
+2. Write your code
+3. In `main.h` add line `#include "functions/my_function.h"`
+4. Use it in `main.c` as you want
+
+## How to add tests to the code
+1. Add a new `my_functions_test.h`to "tests/test_functions"
+2. Use the `test_template.h` to copy the methods to your test code.
+3. Only edit between the indicated comments
+4. Set a test title in `char test_title`
+5. While testing you must set a value for `test_list[temp].testPassed`either `TRUE` or `FALSE`
+6. After you are done with writing, in `tests.h`you have to add line `#include "test_functions/my_functions_test.h"`
+7. In the `runt_tests()`in `tests.h`you have to add the driver function for the `my_functions_test.h`with parameters `(test_list, &i)`so something like: `run_my_function_tests(test_list, &i);`
+8. In `main.c`set testing to TRUE if you want to see the tests run
+
+# Stage 2
+
+## Tasks
+The key point for this stage is to choose an appropriate variant of `exec()` that will take
+into account the `PATH` environment parameter. Read also the manual very carefully
 about how to handle external program parameters. Remember that we should be able to
 support any number of command parameters.
 
@@ -50,19 +84,3 @@ function apply_command(string[]) -> return int (0 if exit, everything else >0)
 
 **Testing**
 By the PDF, and you can come up with other stuff
-
-## How to add a new function to the code
-1. Add a new `my_function.h` to the "functions" folder
-2. Write your code
-3. In `main.h` add line `#include "functions/my_function.h"`
-4. Use it in `main.c` as you want
-
-## How to add a tests to the code
-1. Add a new `my_functions_test.h`to "tests/test_functions"
-2. Use the `test_template.h` to copy the methods to your test code.
-3. Only edit between the indicated comments
-4. Set a test title in `char test_title`
-5. While testing you must set a value for `test_list[temp].testPassed`either `TRUE` or `FALSE`
-6. After you are done with writing, in `tests.h`you have to add line `#include "test_functions/my_functions_test.h"`
-7. In the `runt_tests()`in `tests.h`you have to add the driver function for the `my_functions_test.h`with parameters `(test_list, &i)`so something like: `run_my_function_tests(test_list, &i);`
-8. In `main.c`set testing to TRUE if you want to see the tests run
