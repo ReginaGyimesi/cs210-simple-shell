@@ -20,22 +20,12 @@ int main()
             print_prompt();
             line = read_input();
 
-            printf("User input: ");
-            printf("%s", line);
-            printf("\n");
-
             args = tokenise(line);
 
-            printf("Every argument:\n");
-            for(int i = 0; args != NULL && args[i] != NULL; ++i){
-                printf("%d. argument: ", i);
-                printf("%s\n", args[i]);
-            }
-
             status = apply_command(args);
-            printf("Result status = %d\n", status);
 
-
+            free(line);
+            free(args);
         } while (status);
     }
 

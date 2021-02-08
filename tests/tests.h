@@ -13,7 +13,6 @@
 #include "test_functions/test_init.h"
 
 // ADD INCLUDES FROM HERE
-#include "test_functions/add_2_number_tests.h"
 #include "test_functions/applycommand_tests.h"
 #include "test_functions/tokenise_tests.h"
 
@@ -22,7 +21,6 @@ int run_tests(){
     test_list = malloc(NUMBER_OF_TESTS * sizeof(struct Test));
 
     // ADD DRIVER FUNCTIONS FROM HERE
-    run_add_2_number_tests(test_list, &i);
     run_applycommand_tests(test_list, &i);
     run_tokenise_tests(test_list, &i);
 
