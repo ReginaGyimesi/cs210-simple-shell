@@ -16,22 +16,6 @@ looks for executable programs.
 4. Add these built-in commands into `applycommand.h`. (How? is up for discussion)
 5. Testing
 
-## How to add a new function to the code
-1. Add a new `my_function.h` to the "functions" folder
-2. Write your code
-3. In `main.h` add line `#include "functions/my_function.h"`
-4. Use it in `main.c` as you want
-
-## How to add tests to the code
-1. Add a new `my_functions_test.h`to "tests/test_functions"
-2. Use the `test_template.h` to copy the methods to your test code.
-3. Only edit between the indicated comments
-4. Set a test title in `char test_title`
-5. While testing you must set a value for `test_list[temp].testPassed`either `TRUE` or `FALSE`
-6. After you are done with writing, in `tests.h`you have to add line `#include "test_functions/my_functions_test.h"`
-7. In the `runt_tests()`in `tests.h`you have to add the driver function for the `my_functions_test.h`with parameters `(test_list, &i)`so something like: `run_my_function_tests(test_list, &i);`
-8. In `main.c`set testing to TRUE if you want to see the tests run
-
 # Stage 2
 
 ## Tasks
