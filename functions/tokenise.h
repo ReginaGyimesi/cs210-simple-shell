@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #define DELIMITER_SIZE 8
+#define MAX_TOKENS 50
 
 char** tokenise(char* input) {
 
@@ -18,7 +19,7 @@ char** tokenise(char* input) {
     int n_token = 1;
     char* current = input;
 
-    while (*current != '\0' && n_token < 50) {
+    while (*current != '\0' && n_token < MAX_TOKENS) {
         for (int i = 0; i < DELIMITER_SIZE; i++) {
             if (*current == delimiters[i]) {
                 n_token ++;
@@ -34,14 +35,14 @@ char** tokenise(char* input) {
     n_token = 0;
     int prev_is_delim = 1;
 
-    while (*current != '\0' && n_token <= 50) {
+    while (*current != '\0' && n_token <= MAX_TOKENS) {
         if (*current == ' ') {
             prev_is_delim = 1;
             *current = '\0';
         }
         else if (prev_is_delim == 1) {
             prev_is_delim = 0;
-            if (n_token != 20) {
+            if (n_token != MAX_TOKENS) {
                 tokens[n_token] = current;
                 n_token ++;
             }

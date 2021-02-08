@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "functions/add_2_number.h"
 #include "functions/tokenise.h"
 #include "functions/applycommand.h"
 #include "functions/prompt.h"
