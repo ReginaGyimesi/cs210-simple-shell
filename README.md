@@ -1,4 +1,29 @@
-﻿# Stage 3
+﻿# Stage 4
+
+## Tasks
+Changing directories
+
+This command has two forms. In the first, it has no parameters and changes the working
+directory to the user’s home directory. 
+
+In the second, it has one parameter which is a directory (either in full path or relative path form) and changes the working directory
+to the directory provided as a parameter. If the directory provided does not exist, then
+it should say that there is no such directory. In fact, you must go further and utilise the
+error value of the system calls using the `perror()` function. 
+
+The shell should check appropriate parameters are used by the user and provide informative messages if this is
+not the case. 
+
+Note, though, that any string could be considered a path as far as the
+command is concerned.
+
+Remember that directory changes are effected with the `chdir()` function.
+Remember that `.` and `..` refer to the current and the parent directory and they can be
+used as part of the path.
+
+1. Create `change_directory.h` header, with regard the above mentioned requirements.
+
+# Stage 3
 
 ## Tasks
 For this stage, we are only interested in two things from the environment the HOME –
