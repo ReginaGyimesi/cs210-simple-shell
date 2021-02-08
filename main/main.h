@@ -10,9 +10,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "functions/tokenise.h"
-#include "functions/applycommand.h"
-#include "functions/prompt.h"
-#include "tests/tests.h"
-
-void testing();
+#include "tokenise.h"
+#include "applycommand.h"
+#include "prompt.h"
