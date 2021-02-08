@@ -39,7 +39,7 @@ you can just keep an array of strings ordered from least to most recent again of
        2. '!<no.>': call `int exec_number_history(int number)`
        3. '!-<no.>': call `int exec_minus_number_history(int number)`
        4. '!!': call `exec_recent_history()`
-    2. `add_to_history(char* user_input)`: if array has not reach its limit (20) than add it into the next available, else start from 0 inde again following the
+    2. `add_to_history(char* user_input)`: if array has not reached its limit (20) than add it into the next available, else start from 0 index again following the
        circular array implementation.
     3. `int exec_number_history(int number)`: execute the command indicated by the parameter, return TRUE if can be done, else FALSE
     4. `int exec_minus_number_history(int number)`: re-executes command with the
