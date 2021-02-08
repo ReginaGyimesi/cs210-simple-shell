@@ -1,4 +1,54 @@
-﻿# Stage 4
+﻿# Stage 5
+
+## Tasks
+In general, what a history feature means is that the shell remembers the instructions the
+user types in and it can invoke again previous commands without the user having to retype them.
+
+This typically works as follows:
+- If the user types in ‘!<no.>’, then the shell re-executes command with number
+<no.>, provided that the user has already typed that many commands and they
+are still in history. The shell counts commands from 1 onwards and for
+simplicity, you could assume that the shell only remembers the last 20
+commands. Note that it doesn’t matter whether the command was a built-in or
+external one, or even whether it was a valid command at all (i.e. if the previous
+command was just garbage then the shell tries to execute the garbage again). It
+is important that the command is executed exactly as it was typed, i.e. if the
+command had a number of parameters these will also have to be used when it is
+invoked again. For these reasons, it is a good idea to just store the full command
+line for each command entered to the history.
+- If the user types in ‘!-<no.>’, then the shell re-executes command with the
+number the current command number minus <no.> provided that such a number
+exists (i.e. it is positive) and the command is still in history.
+- If the user types in ‘!!’, then the last command from the history is executed
+
+Note that a command invoked from the history is not entered again into the history (i.e.
+only new commands are entered into the history).
+Moreover, the command should be checking for appropriateness of inputs and provide
+the user with informative messages when the inputs are not appropriate (i.e. when not
+enough commands have been saved or the number is invalid).
+To maintain the history inside your shell, you have two options. Either you can define
+a struct with an integer (the command number, starting from 1 and keep on going
+forever) and a string (the command line itself). As the shell only keeps the last 20
+commands, you can store the history in an array of 20 struct elements. Alternatively,
+you can just keep an array of strings ordered from least to most recent again of size 20.
+
+1. Create `History` struct. Fields: `int number, char* command`. Create array of `History` with 20 elements. Add in `main.h`
+2. Create `history_handler.h`. Implement the following methods:
+    1. `int check_history_type(char* user_input)`: check whether the user entered an input starting with:
+       1. '!': call `int add_to_history(char* user_input)`
+       2. '!<no.>': call `int exec_number_history(int number)`
+       3. '!-<no.>': call `int exec_minus_number_history(int number)`
+       4. '!!': call `exec_recent_history()`
+    2. `add_to_history(char* user_input)`: if array has not reach its limit (20) than add it into the next available, else start from 0 inde again following the
+       circular array implementation.
+    3. `int exec_number_history(int number)`: execute the command indicated by the parameter, return TRUE if can be done, else FALSE
+    4. `int exec_minus_number_history(int number)`: re-executes command with the
+       number the current command number minus <no.> provided that such a number
+       exists (i.e. it is positive) and the command is still in history, return TRUE if can be done, else FALSE
+    5. `int exec_recent_history()`: execute the last command from the history, return TRUE if can be done, else FALSE
+3. Create `print_history.h`. On command `history`, the array of `History` should be printed out.
+ 
+# Stage 4
 
 ## Tasks
 Changing directories
