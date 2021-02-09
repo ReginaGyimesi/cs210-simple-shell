@@ -7,9 +7,17 @@
 
 #endif //CS210_SIMPLE_SHELL_MAIN_H
 
-#include <stdio.h>
-#include <string.h>
+#define TRUE 1
+#define FALSE 0
+#define ERROR -1
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "change_directory.h"
 #include "tokenise.h"
 #include "applycommand.h"
 #include "prompt.h"
+
