@@ -16,6 +16,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "set_directory.h"
 #include "change_directory.h"
 #include "tokenise.h"
 #include "applycommand.h"
