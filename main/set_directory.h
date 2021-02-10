@@ -5,8 +5,7 @@
 
 // Gets and sets directory to HOME, if home directory is null then exists.
 int set_directory() {
-    char *homedir = getenv("HOME");
-    int setdir = chdir(homedir);
+    char *homedir = chdir(getenv("HOME"));
 
     if (homedir != NULL) {
         printf("Home directory in environment");
