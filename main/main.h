@@ -22,6 +22,7 @@
 #include "tokenise.h"
 #include "applycommand.h"
 #include "prompt.h"
+#include "history_handler.h"
 
 typedef struct HISTORY {
 	int number;
