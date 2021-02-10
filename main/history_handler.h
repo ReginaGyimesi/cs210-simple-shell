@@ -18,6 +18,7 @@ void free_history(char** dest) {
         free(dest[k]);
     }
     free(dest);
+}
 
 void add_to_history(char* input, char* history[]) {
     
