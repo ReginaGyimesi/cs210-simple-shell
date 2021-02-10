@@ -9,9 +9,10 @@ int main()
     char *line;
     char **args;
     int status;
-    char* history[20] = malloc(sizeof(char*) * 20);
+    char* history[20];
 
     set_directory();
+    make_history(history);
     welcome();
     
     do {
