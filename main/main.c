@@ -10,6 +10,8 @@ int main()
     char **args;
     int status;
 
+    set_directory();
+
     do {
 
         print_prompt();
