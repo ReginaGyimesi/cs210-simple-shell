@@ -4,7 +4,6 @@
 // Will return no more than 50 tokens, as well as the null token
 // Created by Mark Oppo on 29/01/2021.
 //
-#include <stdlib.h>
 
 #define DELIMITER_SIZE 8
 #define MAX_TOKENS 50
