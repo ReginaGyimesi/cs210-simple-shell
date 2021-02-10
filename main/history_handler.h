@@ -12,6 +12,13 @@ void make_history(char** dest) {
     }
 }
 
+void free_history(char** dest) {
+    
+    for (int k = 0; k < 20; k++) {
+        free(dest[k]);
+    }
+    free(dest);
+
 void add_to_history(char* input, char* history[]) {
     
     int i = 0;

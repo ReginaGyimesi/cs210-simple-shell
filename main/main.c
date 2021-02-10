@@ -28,6 +28,6 @@ int main()
         free(args);
     } while (status);
 
-    free(history) // later on, the history will be saved in a separate file
+    free_history(history) // later on, the history will be saved in a separate file
     return 0;
 }
