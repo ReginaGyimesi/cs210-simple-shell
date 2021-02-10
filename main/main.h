@@ -21,3 +21,7 @@
 #include "applycommand.h"
 #include "prompt.h"
 
+typedef struct HISTORY {
+	int number;
+	char** command;
+} History

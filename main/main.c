@@ -9,7 +9,9 @@ int main()
     char *line;
     char **args;
     int status;
+	char* history[20] = malloc(sizeof(char*) * 20);
 
+	welcome();
     do {
 
         print_prompt();
@@ -23,5 +25,6 @@ int main()
         free(args);
     } while (status);
 
+	free(history);    // later on, the history will be saved in a separate file
     return 0;
 }
