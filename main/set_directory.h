@@ -22,11 +22,12 @@ int set_directory() {
     char cwd[PATH_MAX];
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
         printf("Current working directory: %s\n", cwd);
+        return TRUE;
     }
     else {
         perror("getcwd() error");
-        return 1;
+        return ERROR;
     }
-    return 0;
+    return TRUE;
 }
 
