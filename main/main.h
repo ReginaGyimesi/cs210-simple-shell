@@ -27,4 +27,4 @@
 typedef struct HISTORY {
 	int number;
 	char** command;
-} History
+} History;
