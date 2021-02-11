@@ -5,13 +5,34 @@
 */
 
 #include <unistd.h>
+#include <stdio.h>
 
 #ifndef CS210_SIMPLE_SHELL_APPLYCOMMAND_H
 #define CS210_SIMPLE_SHELL_APPLYCOMMAND_H
+#define COMMANDS_LENGTH 4
 
 #endif //CS210_SIMPLE_SHELL_APPLYCOMMAND_H
 
+
+
+
+
+
+
 int apply_command(char** tokens) {
+    char *builtin_str[] = {
+            "exit",
+            "getpath",
+            "setpath",
+            "cd"
+    };
+    int (*builtin_func[]) (char **) = {
+            &exit1,
+            &getpath,
+            &setpath,
+            &change_directory
+    };
+
     if (tokens == NULL){   //if the first input is null or a NULL char, then we return 0 thus indicating it is an exit
         return FALSE;
     }
@@ -25,11 +46,11 @@ int apply_command(char** tokens) {
     }
     else
     {
-        char *inbuilt[] = {"exit"}; //an array where we store our non-linux commands
+
         // so far only exit but will grow later
-        for (int i = 0; i < 1; ++i) {
-            if (strcmp(tokens[0], inbuilt[i]) == 0) //checking if the input is an inbuilt function and returning the
-                return FALSE;                        // the index if it
+        for (int i = 0; i < COMMANDS_LENGTH; ++i) {
+            if (strcmp(tokens[0], builtin_str[i]) == 0) //checking if the input is an inbuilt function and returning the
+                return (*builtin_func[i])(tokens);                        // the index if it
         }
         pid_t pid;
         pid=fork();

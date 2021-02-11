@@ -18,7 +18,7 @@
 #include <limits.h>
 
 #include "set_directory.h"
-#include "change_directory.h"
+#include "inbuilt.h"
 #include "tokenise.h"
 #include "applycommand.h"
 #include "prompt.h"
