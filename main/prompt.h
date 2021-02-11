@@ -7,7 +7,7 @@
 
 // Displays a welcome message.
 int welcome() {
-    printf("CS210 Group 5 Simple Shell\n");
+    printf("CS210 Group 5 Simple Shell %s\n", VERSION);
     return 0;
 }
 
