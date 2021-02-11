@@ -25,9 +25,11 @@ int apply_command(char** tokens) {
     }
     else
     {
-        char *inbuilt[] = {"exit"}; //an array where we store our non-linux commands
+        char *inbuilt[] = {"cd", "exit"}; //an array where we store our non-linux commands
         // so far only exit but will grow later
-        for (int i = 0; i < 1; ++i) {
+        for (int i = 0; i < 2; ++i) {
+            if (strcmp(tokens[0], "cd") == 0) //checking if the input is an inbuilt function and returning the
+                return change_directory(tokens);
             if (strcmp(tokens[0], inbuilt[i]) == 0) //checking if the input is an inbuilt function and returning the
                 return FALSE;                        // the index if it
         }

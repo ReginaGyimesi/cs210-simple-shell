@@ -14,13 +14,13 @@ int change_directory(char** tokens){
     }
 
     if(tokens[2] != NULL){
-        perror("Too many arguments\n");
+        fprintf(stderr, "Too many arguments. Use case: cd [path/to/directory]\n");
         return ERROR;
     }
 
     if(tokens[1] == NULL){ // no parameter were given, set to user's home directory
         if(chdir(getenv("HOME"))!=0){
-            perror("Failed to change HOME");
+            perror("Failed to change HOME, maybe it does not exist?");
             return ERROR;
         }
         return TRUE;
@@ -28,8 +28,11 @@ int change_directory(char** tokens){
     else{               // some parameter were given, execute cd with that param
         if(chdir(tokens[1]) != 0){  // disregarding other params, only using the next param after cd
             char* s = malloc(sizeof(char*)*100);
-            strcpy(s, strcat("Failed to change to ", tokens[1]));
-            perror("Failed to change");
+            strcpy(s, "Failed to change to ");
+            strcat(s, tokens[1]);
+            strcat(s, " Use case: cd [path/to/directory]");
+            perror(s);
+            free(s);
             return ERROR;
         }
     }
