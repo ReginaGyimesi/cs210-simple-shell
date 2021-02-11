@@ -40,8 +40,8 @@ void add_to_history(char* input, char* history[]) {
 }
 
 int exec_number_history(int number, char* history[]) {
-        for (int i = 1; i <= 20; i++) {
-            if (*history[i] == number) {
+        for (int i = 1; i <= 20 && *(history[i]) != '\0'; i++) {
+            if (i == number) {
                 printf("History command: %s", history[number]);
                 return TRUE;
             }
@@ -51,9 +51,9 @@ int exec_number_history(int number, char* history[]) {
     }
 
 int exec_minus_number_history(int number, char* history[]) {
-    for (int i = 1; i <= 20; i++) {
-        if (*history[i] == number) {
-            int current = *history[i]  - number;
+    for (int i = 1; i <= 20 && *(history[i]) != '\0'; i++) {
+        if (i == number) {
+            int current = i  - number;
             if(current > 0) {
             printf("History command: %s", current);
             return TRUE;
