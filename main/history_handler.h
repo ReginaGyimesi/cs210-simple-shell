@@ -42,7 +42,7 @@ void add_to_history(char* input, char* history[]) {
 int exec_number_history(int number) {
     for (int i = 0; i < 20; i++) {
         if(*(history[i]) == number) {
-            printf(history[number]);
+            printf("%s", history[number]);
             return TRUE;
         }
     }
