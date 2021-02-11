@@ -55,7 +55,7 @@ int exec_minus_number_history(int number, char* history[]) {
         if (i == number) {
             int current = i  - number;
             if(current > 0) {
-            printf("History command: %s", current);
+            printf("History command: %s", history[current]);
             return TRUE;
             }
         }
