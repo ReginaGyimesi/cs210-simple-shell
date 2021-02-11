@@ -11,9 +11,11 @@ int main()
     int status;
     char* history[20];
 
+
+    welcome();
     set_directory();
     make_history(history);
-    welcome();
+
     
     do {
 

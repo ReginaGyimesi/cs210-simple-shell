@@ -38,5 +38,15 @@ void add_to_history(char* input, char* history[]) {
     else {
         strcpy(history[i], input);
     }
-}
 
+int exec_number_history(int number) {
+    for (int i = 0; i < 20; i++) {
+        if(*(history[i]) == number) {
+            printf(history[number]);
+            return TRUE;
+        }
+    }
+    perror("History cannot be executed");
+    return FALSE;
+    }
+}
