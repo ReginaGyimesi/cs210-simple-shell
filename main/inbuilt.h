@@ -60,10 +60,10 @@ int getpath(char** tokens)
 }
 int setpath(char** tokens)
 {
-    if(tokens[2]!=NULL)
+    if(tokens[1]==NULL||tokens[2]!=NULL)
     {
         printf("Too many arguments for setpath\n");
-        return -1
+        return -1;
     }
     char * isDir;
     char path[100];
