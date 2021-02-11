@@ -9,6 +9,7 @@ int main()
     char *line;
     char **args;
     int status;
+    char *start_path = getenv("PATH");
     char* history[20];
 
     set_directory();
@@ -27,7 +28,9 @@ int main()
         free(line);
         free(args);
     } while (status);
-
+    
     free_history(history); // later on, the history will be saved in a separate file
+    change_directory(tokenise(start_path));
+    
     return 0;
 }
