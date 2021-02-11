@@ -9,7 +9,7 @@ int main()
     char *line;
     char **args;
     int status;
-    char *start_path = getenv("PATH");
+    char *start_path = getenv("PATH"); // initial path stored
     char* history[20];
 
     set_directory();
@@ -30,7 +30,7 @@ int main()
     } while (status);
     
     free_history(history); // later on, the history will be saved in a separate file
-    change_directory(tokenise(start_path));
+    setenv("PATH", start_path, 1); // initial path restored
     
     return 0;
 }
