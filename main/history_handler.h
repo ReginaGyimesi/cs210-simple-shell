@@ -40,26 +40,30 @@ void add_to_history(char* input, char* history[]) {
 }
 
 int exec_number_history(int number, char* history[]) {
-        for (int i = 1; i <= 20 && *(history[i]) != '\0'; i++) {
-            if (i == number) {
-                printf("History command: %s", history[number]);
-                return TRUE;
-            }
-        }
-        perror("History cannot be executed");
-        return FALSE;
+    
+    number--;
+    if (number >= 0 && number <= 19 && *(history[number]) != '\0') {
+        printf("History command: %s\n", history[number]);
+        return TRUE;
     }
 
+    perror("History cannot be executed");
+    return FALSE;
+}
+
 int exec_minus_number_history(int number, char* history[]) {
-    for (int i = 1; i <= 20 && *(history[i]) != '\0'; i++) {
-        if (i == number) {
-            int current = i  - number;
-            if(current > 0) {
-            printf("History command: %s", history[current]);
-            return TRUE;
-            }
-        }
+
+    int current = 0;
+    while (*(history[current]) != '\0') {
+        current++;
     }
+    current = current - number;
+    
+    if (current >= 0 && current <= 19 && *(history[current]) != '\0') {
+        printf("History command: %s\n", history[current]);
+        return TRUE;
+    }
+
     perror("History cannot be executed");
     return FALSE;
 }
