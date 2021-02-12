@@ -13,13 +13,8 @@
 
 #endif //CS210_SIMPLE_SHELL_APPLYCOMMAND_H
 
-
-
-
-
-
-
 int apply_command(char** tokens) {
+
     char *builtin_str[] = {
             "exit",
             "getpath",
@@ -46,7 +41,6 @@ int apply_command(char** tokens) {
     }
     else
     {
-
 
         for (int i = 0; i < COMMANDS_LENGTH; ++i) {
             if (strcmp(tokens[0], builtin_str[i]) == 0) //checking if the input is an inbuilt function and if so calling it
