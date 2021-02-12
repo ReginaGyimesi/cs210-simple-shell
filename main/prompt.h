@@ -29,7 +29,7 @@ char* read_input() {
     else if(strlen(input)==1)		//empty input
     {
         printf("Enter a valid command\n");
-        fflush(stdin);
+         fflush(stdin);
         return input;			//does not actually return anything just calls itself until there is either a valid input or CTRL-d
     }
     else if(input[strlen(input)-1]!='\n' && strlen(input)<MAX_INPUT_LENGTH-1){

@@ -55,6 +55,7 @@ int getpath(char** tokens)
     }
     else
         printf("Invalid arguments after getpath\n");
+    return -1;
 
 
 }
