@@ -47,11 +47,13 @@ int apply_command(char** tokens) {
     else
     {
 
-        // so far only exit but will grow later
+
         for (int i = 0; i < COMMANDS_LENGTH; ++i) {
-            if (strcmp(tokens[0], builtin_str[i]) == 0) //checking if the input is an inbuilt function and returning the
-                return (*builtin_func[i])(tokens);                        // the index if it
+            if (strcmp(tokens[0], builtin_str[i]) == 0) //checking if the input is an inbuilt function and if so calling it
+                return (*builtin_func[i])(tokens);                        // with the arguments provided with it
         }
+
+                                                        //else creating a Unix call and passing in the tokenised the arguments
         pid_t pid;
         pid=fork();
         if(pid<0)
