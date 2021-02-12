@@ -12,9 +12,11 @@ int main()
     char *start_path = getenv("PATH"); // initial path stored
     char* history[20];
 
+
+    welcome();
     set_directory();
     make_history(history);
-    welcome();
+
     
     do {
 
