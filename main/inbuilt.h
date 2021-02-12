@@ -1,5 +1,5 @@
 //
-// Created by bilko on 2021. 02. 11..
+// Created by Balazs Szalay on 2021. 02. 11.
 //
 
 #ifndef CS210_SIMPLE_SHELL_INBUILT_H
@@ -31,6 +31,7 @@ int change_directory(char** tokens){
         }
         return TRUE;
     }
+
     else{               // some parameter were given, execute cd with that param
         if(chdir(tokens[1]) != 0){  // disregarding other params, only using the next param after cd
             perror("Failed to change");
@@ -46,6 +47,7 @@ int exit1()
 {
     return 0;
 }
+
 int getpath(char** tokens)
 {
     if(tokens[1] == NULL){
@@ -57,8 +59,8 @@ int getpath(char** tokens)
         printf("Invalid arguments after getpath\n");
     return -1;
 
-
 }
+
 int setpath(char** tokens)
 {
     if(tokens[1]==NULL||tokens[2]!=NULL)
@@ -66,16 +68,16 @@ int setpath(char** tokens)
         printf("Too many arguments for setpath\n");
         return -1;
     }
+
     char * isDir;
     char path[100];
     const char delim[2]=":";
     isDir=strtok(tokens[1],delim);
     strcpy(path,isDir);
+
     while(isDir!=NULL)
     {
-
         //printf("These are the tokens:%s\n",isDir);
-
         DIR* dir=opendir(isDir);
         if(dir)
         {
@@ -87,10 +89,6 @@ int setpath(char** tokens)
             return -1;
         }
 
-
-
-
-
         isDir=strtok(NULL,delim);
         if(isDir!=NULL)
         {
@@ -99,24 +97,11 @@ int setpath(char** tokens)
 
         }
 
-
-
     }
 
     //printf("This is the path:%s\n",path);
-
-
-
-
-
-
     setenv("PATH",path,1);
-
     free(isDir);
-
-
-
     return 1;
-
 
 }
