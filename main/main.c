@@ -33,7 +33,7 @@ int main()
     
     free_history(history); // later on, the history will be saved in a separate file
     setenv("PATH", start_path, 1); // initial path restored
-    printf("%s\n";getenv("PATH"));
+    printf("%s\n",getenv("PATH"));
     
     return 0;
 }
