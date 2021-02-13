@@ -25,7 +25,7 @@ int main()
 
         args = tokenise(line);
 
-        status = apply_command(args);
+        status = apply_command(args, history);
 
         free(line);
         free(args);

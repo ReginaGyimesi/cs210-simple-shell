@@ -15,10 +15,7 @@
 */
 
 
-#include <dirent.h>
-#include <errno.h>
-
-int change_directory(char** tokens){
+int change_directory(char** tokens, char** history){
     if(tokens == NULL || *tokens == NULL || tokens[0] == NULL){
         perror("NULL pointer error in cd command\n");
         return ERROR;
@@ -48,7 +45,7 @@ int exit1()
     return 0;
 }
 
-int getpath(char** tokens)
+int getpath(char** tokens, char** history)
 {
     if(tokens[1] == NULL){
         const char *s = getenv("PATH");
@@ -61,7 +58,7 @@ int getpath(char** tokens)
 
 }
 
-int setpath(char** tokens)
+int setpath(char** tokens, char** history)
 {
     if(tokens[1]==NULL||tokens[2]!=NULL)
     {
@@ -104,4 +101,8 @@ int setpath(char** tokens)
     free(isDir);
     return 1;
 
+}
+
+int test(char** tokens, char** history){
+    return check_history_type(tokens, history);
 }

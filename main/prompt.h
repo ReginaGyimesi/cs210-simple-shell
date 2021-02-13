@@ -2,6 +2,10 @@
 // Contains methods to display a welcome message, print the command prompt, and read user input.
 // Created by Eamonn McClay on 28/01/2021.
 //
+#ifndef CS210_SIMPLE_SHELL_PROMPT_H
+#define CS210_SIMPLE_SHELL_PROMPT_H
+
+#endif //CS210_SIMPLE_SHELL_INBUILT_H
 
 #define MAX_INPUT_LENGTH 514
 
