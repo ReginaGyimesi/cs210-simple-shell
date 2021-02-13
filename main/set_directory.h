@@ -6,13 +6,13 @@
 #ifndef CS210_SIMPLE_SHELL_SET_DIRECTORY_H
 #define CS210_SIMPLE_SHELL_SET_DIRECTORY_H
 
-#endif //CS210_SIMPLE_SHELL_APPLYCOMMAND_H
+#endif //CS210_SIMPLE_SHELL_SET_DIRECTORY_H
 
 // gets and sets directory to HOME, if home directory is null then exists
 int set_directory() {
-   if (chdir(getenv("HOME")) != 0) {
-            perror("Failed");
-        }
+    if (chdir(getenv("HOME")) != 0) {
+        perror("Failed");
+    }
 
     // checks if current directory is set to home
     char cwd[PATH_MAX];

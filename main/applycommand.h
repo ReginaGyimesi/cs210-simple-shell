@@ -1,12 +1,11 @@
 /*
 // taking an array of tokenized inputs
 // executing a command
-// Created by Balázs on 2021. 02. 01..
+// Created by Balázs Szalay on 2021. 02. 01.
 */
 
 #ifndef CS210_SIMPLE_SHELL_APPLYCOMMAND_H
 #define CS210_SIMPLE_SHELL_APPLYCOMMAND_H
-#define COMMANDS_LENGTH 6
 
 #endif //CS210_SIMPLE_SHELL_APPLYCOMMAND_H
 

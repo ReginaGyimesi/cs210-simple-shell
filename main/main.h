@@ -7,6 +7,12 @@
 #define TRUE 1
 #define FALSE 0
 #define ERROR -1
+#define HISTORY_SIZE 2
+#define NUMBER_OF_DECIMALS 10
+#define MAX_INPUT_LENGTH 514
+#define COMMANDS_LENGTH 6
+#define DELIMITER_SIZE 8
+#define MAX_TOKENS 50
 
 #define VERSION "Stage 3"
 
