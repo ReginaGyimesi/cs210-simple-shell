@@ -22,7 +22,7 @@ int apply_command(char** tokens, char** history) {
             &getpath,
             &setpath,
             &change_directory,
-            &test
+            &call_history_handler
     };
 
     if (tokens == NULL){   //if the first input is null or a NULL char, then we return 0 thus indicating it is an exit

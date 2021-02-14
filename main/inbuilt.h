@@ -16,7 +16,7 @@
 /*
  * Function to change directory
  */
-int change_directory(char** tokens) {
+int change_directory(char** tokens, char** history) {
 
     // initial error checks
     if (tokens == NULL || *tokens == NULL || tokens[0] == NULL) {
@@ -114,6 +114,6 @@ int setpath(char** tokens, char** history)
 
 }
 
-int test(char** tokens, char** history){
+int call_history_handler(char** tokens, char** history){
     return check_history_type(tokens, history);
 }
