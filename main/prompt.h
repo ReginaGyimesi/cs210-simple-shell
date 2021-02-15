@@ -3,7 +3,12 @@
 // Created by Eamonn McClay on 28/01/2021.
 //
 
-#define MAX_INPUT_LENGTH 514
+#ifndef CS210_SIMPLE_SHELL_PROMPT_H
+#define CS210_SIMPLE_SHELL_PROMPT_H
+
+#endif //CS210_SIMPLE_SHELL_PROMPT_H
+
+
 
 // Displays a welcome message.
 int welcome() {
@@ -29,7 +34,7 @@ char* read_input() {
     else if(strlen(input)==1)		//empty input
     {
         printf("Enter a valid command\n");
-         fflush(stdin);
+        fflush(stdin);
         return input;			//does not actually return anything just calls itself until there is either a valid input or CTRL-d
     }
     else if(input[strlen(input)-1]!='\n' && strlen(input)<MAX_INPUT_LENGTH-1){

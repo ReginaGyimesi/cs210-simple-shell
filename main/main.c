@@ -1,5 +1,5 @@
 //
-// Created by zkiss on 27/01/2021.
+// Created by Zoltan Kiss on 27/01/2021.
 //
 
 #include "main.h"
@@ -25,7 +25,7 @@ int main()
 
         args = tokenise(line);
 
-        status = apply_command(args);
+        status = apply_command(args, history);
 
         free(line);
         free(args);

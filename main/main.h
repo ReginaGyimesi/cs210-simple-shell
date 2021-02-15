@@ -4,14 +4,19 @@
 
 #ifndef CS210_SIMPLE_SHELL_MAIN_H
 #define CS210_SIMPLE_SHELL_MAIN_H
-
-#endif //CS210_SIMPLE_SHELL_MAIN_H
-
 #define TRUE 1
 #define FALSE 0
 #define ERROR -1
+#define HISTORY_SIZE 2
+#define NUMBER_OF_DECIMALS 10
+#define MAX_INPUT_LENGTH 514
+#define COMMANDS_LENGTH 6
+#define DELIMITER_SIZE 8
+#define MAX_TOKENS 50
 
 #define VERSION "Stage 3"
+
+#endif //CS210_SIMPLE_SHELL_MAIN_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,13 +24,15 @@
 #include <unistd.h>
 #include <limits.h>
 #include <sys/wait.h>
+#include <dirent.h>
+#include <errno.h>
 
-#include "set_directory.h"
 #include "inbuilt.h"
 #include "tokenise.h"
-#include "applycommand.h"
-#include "prompt.h"
 #include "history_handler.h"
+#include "applycommand.h"
+#include "set_directory.h"
+#include "prompt.h"
 
 typedef struct HISTORY {
 	int number;

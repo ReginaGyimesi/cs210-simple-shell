@@ -5,8 +5,10 @@
 // Created by Mark Oppo on 29/01/2021.
 //
 
-#define DELIMITER_SIZE 8
-#define MAX_TOKENS 50
+#ifndef CS210_SIMPLE_SHELL_TOKENISE_H
+#define CS210_SIMPLE_SHELL_TOKENISE_H
+
+#endif //CS210_SIMPLE_SHELL_TOKENISE_H
 
 char** tokenise(char* input) {
 

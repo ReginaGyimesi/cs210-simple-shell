@@ -1,19 +1,15 @@
 /*
 // taking an array of tokenized inputs
 // executing a command
-// Created by Balázs on 2021. 02. 01..
+// Created by Balázs Szalay on 2021. 02. 01.
 */
-
-#include <unistd.h>
-#include <stdio.h>
 
 #ifndef CS210_SIMPLE_SHELL_APPLYCOMMAND_H
 #define CS210_SIMPLE_SHELL_APPLYCOMMAND_H
-#define COMMANDS_LENGTH 4
 
 #endif //CS210_SIMPLE_SHELL_APPLYCOMMAND_H
 
-int apply_command(char** tokens) {
+int apply_command(char** tokens, char** history) {
 
     char *builtin_str[] = {
             "exit",
@@ -21,11 +17,12 @@ int apply_command(char** tokens) {
             "setpath",
             "cd"
     };
-    int (*builtin_func[]) (char **) = {
+    int (*builtin_func[]) (char **, char**) = {
             &exit1,
             &getpath,
             &setpath,
-            &change_directory
+            &change_directory,
+            &call_history_handler
     };
 
     if (tokens == NULL){   //if the first input is null or a NULL char, then we return 0 thus indicating it is an exit
@@ -41,10 +38,12 @@ int apply_command(char** tokens) {
     }
     else
     {
-
+        if((*tokens)[0] == '!'){
+            return (*builtin_func[4])(tokens, history);
+        }
         for (int i = 0; i < COMMANDS_LENGTH; ++i) {
             if (strcmp(tokens[0], builtin_str[i]) == 0) //checking if the input is an inbuilt function and if so calling it
-                return (*builtin_func[i])(tokens);                        // with the arguments provided with it
+                return (*builtin_func[i])(tokens, history);                        // with the arguments provided with it
         }
 
                                                         //else creating a Unix call and passing in the tokenised the arguments
