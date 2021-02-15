@@ -56,7 +56,7 @@ int exec_number_history(int number, char* history[]) {
         return apply_command(tokens, history);
     }
 
-    fprintf(stderr, "History cannot be executed");
+    fprintf(stderr, "History cannot be executed\n");
     return ERROR;
 }
 
@@ -73,7 +73,7 @@ int exec_minus_number_history(int number, char* history[]) {
         return apply_command(tokens, history);
     }
 
-    fprintf(stderr, "History cannot be executed");
+    fprintf(stderr, "History cannot be executed\n");
     return ERROR;
 }
 
@@ -121,7 +121,7 @@ int convert_number_to_int(char* text){
 
     for(int i = 0; i < NUMBER_OF_DECIMALS; ++i){            // check that the array only contains numbers and there is no overflow
         if((pure_number_chars[i] < '0' && pure_number_chars[i]!='\0') || (pure_number_chars[i] > '9' && pure_number_chars[i]!='\0') || (i == (NUMBER_OF_DECIMALS-1) && pure_number_chars[i]!='\0')){
-            fprintf(stderr, "Something went wrong during number conversion");
+            fprintf(stderr, "Something went wrong during number conversion\n");
             return ERROR;
         }
     }
@@ -139,8 +139,7 @@ int check_history_type(char** tokens, char** history){
 
     if(first_token[0] == '!'){                                  // checking string chars one-by-one
         if(first_token[1] == '!' && first_token[2] == '\0'){
-            return TRUE;
-            //return exec_recent_history();
+            return exec_recent_history();
         }
         else if(first_token[1] == '-'){
             int number = convert_number_to_int(tokens[0]);
@@ -160,7 +159,7 @@ int check_history_type(char** tokens, char** history){
             printf("History has been reset!\n");
         }
         else{
-            fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]");
+            fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
         }
 
     }
@@ -168,4 +167,33 @@ int check_history_type(char** tokens, char** history){
     return ERROR;
 
 
+}
+
+/*
+* Executes the most recent command in history
+*/
+int exec_recent_history(char* history[]) {
+    if(history[0] != NULL) {
+        return exec_number_history(HISTORY_SIZE-1, history);
+    }
+
+    fprintf(stderr, "No commands stored in recent history\n");
+    return ERROR;
+}
+
+/*
+* Prints all commands stored in history
+*/
+int print_history(char* history[]) {
+    if(history[0] != NULL) {
+        int current = 0;
+        while (history[current] != NULL) {
+            printf("%d. %s\n", current+1, history[current]);
+            current++;
+        }
+        return TRUE;
+    }
+
+    fprintf(stderr, "No commands stored in history\n");
+    return ERROR;
 }
