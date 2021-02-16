@@ -63,7 +63,7 @@ char** exec_number_history(int number, char* history[]) {
 char** exec_minus_number_history(int number, char* history[]) {
 
     int current = 0;
-    while (*(history[current]) != '\0') {
+    while (current < HISTORY_SIZE && *(history[current]) != '\0') {
         current++;
     }
     current = current - number;
@@ -88,14 +88,22 @@ int convert_number_to_int(const char* text){
     char** end_ptr = NULL;
 
     for(int i = 0; text[i] != '\0'; ++i){                   // fill array with numbers
-        if(text[i]>='0' && text[i]<='9'){
+        if(text[i] == '!' && i == 0) continue;
+        if(text[i] == '-' && i == 1) continue;
+        if((text[i]>='0' && text[i]<='9') || text[i] == '\0'){
             pure_number_chars[flag++] = text[i];
+        }
+        else{
+            fprintf(stderr, "Something went wrong during number conversion\n");
+            fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
+            return ERROR;
         }
     }
 
     for(int i = 0; i < NUMBER_OF_DECIMALS; ++i){            // check that the array only contains numbers and there is no overflow
         if((pure_number_chars[i] < '0' && pure_number_chars[i]!='\0') || (pure_number_chars[i] > '9') || (i == (NUMBER_OF_DECIMALS-1) && pure_number_chars[i]!='\0')){
             fprintf(stderr, "Something went wrong during number conversion\n");
+            fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
             return ERROR;
         }
     }
@@ -119,17 +127,23 @@ char** exec_recent_history(char* history[]) {
 /*
 * Prints all commands stored in history
 */
-int print_history(char* history[]) {
+int print_history(char** tokens, char* history[]) {
+    if(history == NULL || *history == NULL || tokens[1] != NULL){
+        fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
+        return ERROR;
+    }
+
     if(*(history[0]) != '\0') {
         int current = 0;
-        while (*(history[current]) != '\0') {
-            printf("%d. %s\n", current+1, history[current]);
+        while (current < HISTORY_SIZE && *(history[current]) != '\0') {
+            printf("%d. %s", current+1, history[current]);
             current++;
         }
         return TRUE;
     }
 
     fprintf(stderr, "No commands stored in history\n");
+    fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
     return ERROR;
 }
 

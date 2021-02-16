@@ -15,14 +15,16 @@ int apply_command(char** tokens, char** history) {
             "exit",
             "getpath",
             "setpath",
-            "cd"
+            "cd",
+            "history"
     };
 
     int (*builtin_func[]) (char **, char**) = {
             &exit1,
             &getpath,
             &setpath,
-            &change_directory
+            &change_directory,
+            &print_history
     };
 
     if (tokens == NULL){   //if the first input is null or a NULL char, then we return 0 thus indicating it is an exit
