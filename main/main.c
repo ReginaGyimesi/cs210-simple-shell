@@ -22,7 +22,7 @@ int main()
 
         print_prompt();
         line = read_input();
-        if (line[0] != '!')
+        if (line != NULL && line[0] != '\0' && line[0] != '!')
             add_to_history(line, history);
 
         args = tokenise(line);
