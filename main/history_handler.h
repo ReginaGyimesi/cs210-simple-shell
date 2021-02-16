@@ -172,10 +172,9 @@ int check_history_type(char** tokens, char** history){
 * Executes the most recent command in history
 */
 int exec_recent_history(char* history[]) {
-    //if(*(history[0]) != '\0') {
-        //return exec_number_history(HISTORY_SIZE-1, history);
+    if(*(history[0]) != '\0') {
         return exec_minus_number_history(1, history);
-    //}
+    }
 
     fprintf(stderr, "No commands stored in recent history\n");
     return ERROR;
