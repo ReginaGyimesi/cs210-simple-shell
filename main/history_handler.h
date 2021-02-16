@@ -1,7 +1,7 @@
 //
 // Contains methods for handling the command history,
 // including methods to store, print and execute previous commands.
-// Created by Mark Oppo, Regina Gyimesi and Zoltan Kiss 10/02/2021
+// Created by Mark Oppo, Regina Gyimesi, Zoltan Kiss and Eamonn McClay 10/02/2021
 //
 
 #ifndef CS210_SIMPLE_SHELL_HISTORY_HANDLER_H
@@ -12,7 +12,7 @@
 void make_history(char** dest) {
     
     for (int k = 0; k < HISTORY_SIZE; k++) {
-        dest[k] = malloc(sizeof(char) * 514);
+        dest[k] = malloc(sizeof(char) * MAX_INPUT_LENGTH);
         dest[k][0] = '\0';
     }
 }
@@ -43,8 +43,6 @@ int add_to_history(char* input, char* history[]) {
         strcpy(history[i], input);
     }
 
-    free(input);
-
     return TRUE;
 }
 
@@ -52,7 +50,9 @@ int exec_number_history(int number, char* history[]) {
 
     number--;
     if (number >= 0 && number <= (HISTORY_SIZE-1) && *(history[number]) != '\0') {
-        char** tokens = tokenise(history[number]);
+        char* line = malloc(sizeof(char) * MAX_INPUT_LENGTH);
+        strcpy(line, history[number]);
+        char** tokens = tokenise(line);
         return apply_command(tokens, history);
     }
 
@@ -63,13 +63,15 @@ int exec_number_history(int number, char* history[]) {
 int exec_minus_number_history(int number, char* history[]) {
 
     int current = 0;
-    while (history[current] != NULL) {
+    while (*(history[current]) != '\0') {
         current++;
     }
     current = current - number;
     
     if (current >= 0 && current <= (HISTORY_SIZE-1) && *(history[current]) != '\0') {
-        char** tokens = tokenise(history[current]);
+        char* line = malloc(sizeof(char) * MAX_INPUT_LENGTH);
+        strcpy(line, history[current]);
+        char** tokens = tokenise(line);
         return apply_command(tokens, history);
     }
 
@@ -80,7 +82,7 @@ int exec_minus_number_history(int number, char* history[]) {
 /*
  * Creates a single string by combining tokens
  */
-char* create_input_from_tokens(char** tokens){
+char* create_input_from_tokens(char** tokens){    // NOW UNUSED
 
     int i = 1;                                          // count the number of tokens
     while(tokens[i++] != NULL){}
@@ -139,7 +141,7 @@ int check_history_type(char** tokens, char** history){
 
     if(first_token[0] == '!'){                                  // checking string chars one-by-one
         if(first_token[1] == '!' && first_token[2] == '\0'){
-            return exec_recent_history();
+            return exec_recent_history(history);
         }
         else if(first_token[1] == '-'){
             int number = convert_number_to_int(tokens[0]);
@@ -149,14 +151,11 @@ int check_history_type(char** tokens, char** history){
             int number = convert_number_to_int(tokens[0]);
             return exec_number_history(number, history);
         }
-        else if(first_token[1] == '\0'){
-            char* input = create_input_from_tokens(tokens);
-            return add_to_history(input, history);
-        }
         else if(strcmp(first_token, "!clear") == 0){
             free_history(history);
             make_history(history);
             printf("History has been reset!\n");
+            return TRUE;
         }
         else{
             fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
@@ -173,9 +172,10 @@ int check_history_type(char** tokens, char** history){
 * Executes the most recent command in history
 */
 int exec_recent_history(char* history[]) {
-    if(history[0] != NULL) {
-        return exec_number_history(HISTORY_SIZE-1, history);
-    }
+    //if(*(history[0]) != '\0') {
+        //return exec_number_history(HISTORY_SIZE-1, history);
+        return exec_minus_number_history(1, history);
+    //}
 
     fprintf(stderr, "No commands stored in recent history\n");
     return ERROR;
@@ -185,9 +185,9 @@ int exec_recent_history(char* history[]) {
 * Prints all commands stored in history
 */
 int print_history(char* history[]) {
-    if(history[0] != NULL) {
+    if(*(history[0]) != '\0') {
         int current = 0;
-        while (history[current] != NULL) {
+        while (*(history[current]) != '\0') {
             printf("%d. %s\n", current+1, history[current]);
             current++;
         }

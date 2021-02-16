@@ -7,7 +7,7 @@
 #define TRUE 1
 #define FALSE 0
 #define ERROR -1
-#define HISTORY_SIZE 2
+#define HISTORY_SIZE 20
 #define NUMBER_OF_DECIMALS 10
 #define MAX_INPUT_LENGTH 514
 #define COMMANDS_LENGTH 6
