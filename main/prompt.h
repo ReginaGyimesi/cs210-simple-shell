@@ -31,16 +31,19 @@ char* read_input() {
     {
         return NULL;
     }
-    else if(strlen(input)==1)		//empty input
+
+    if(strlen(input)==1)		//empty input
     {
         printf("Enter a valid command\n");
         fflush(stdin);
         return input;			//does not actually return anything just calls itself until there is either a valid input or CTRL-d
     }
-    else if(input[strlen(input)-1]!='\n' && strlen(input)<MAX_INPUT_LENGTH-1){
+
+    if(input[strlen(input)-1]!='\n' && strlen(input)<MAX_INPUT_LENGTH-1){
         return NULL;
     }
-    else if(input[strlen(input)-1]!='\n' && strlen(input)>=MAX_INPUT_LENGTH-1)
+
+    if(input[strlen(input)-1]!='\n' && strlen(input)>=MAX_INPUT_LENGTH-1)
     {
         printf("Input too long\n");
         fflush(stdin);

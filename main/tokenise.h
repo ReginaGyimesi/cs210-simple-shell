@@ -32,6 +32,8 @@ char** tokenise(char* input) {
     }
 
     char** tokens = malloc(sizeof(char*) * (n_token + 1));
+    memset(tokens, '\0', sizeof(char*) * (n_token + 1));
+
     current = input;
     n_token = 0;
     int prev_is_delim = 1;

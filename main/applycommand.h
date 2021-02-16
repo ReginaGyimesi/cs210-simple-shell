@@ -17,56 +17,62 @@ int apply_command(char** tokens, char** history) {
             "setpath",
             "cd"
     };
+
     int (*builtin_func[]) (char **, char**) = {
             &exit1,
             &getpath,
             &setpath,
-            &change_directory,
-            &call_history_handler
+            &change_directory
     };
 
     if (tokens == NULL){   //if the first input is null or a NULL char, then we return 0 thus indicating it is an exit
         return FALSE;
     }
 
-    else if(*tokens == NULL){ //this happens if the user only pressed Enter, and nothing else as input
+    if(*tokens == NULL){ //this happens if the user only pressed Enter, and nothing else as input
         return ERROR;
     }
 
-    else if(*tokens[0] == '\0'){ //if the first input is null or a NULL char, then we return 0 thus indicating it is an exit
+    if(*tokens[0] == '\0'){ //if the first input is null or a NULL char, then we return 0 thus indicating it is an exit
         return FALSE;
     }
     else
     {
-        if((*tokens)[0] == '!'){
-            return (*builtin_func[4])(tokens, history);
-        }
-        for (int i = 0; i < COMMANDS_LENGTH; ++i) {
-            if (strcmp(tokens[0], builtin_str[i]) == 0) //checking if the input is an inbuilt function and if so calling it
-                return (*builtin_func[i])(tokens, history);                        // with the arguments provided with it
+        if((*tokens)[0] == '!'){                        // check if history command
+            tokens = check_history_type(tokens, history);
         }
 
-                                                        //else creating a Unix call and passing in the tokenised the arguments
-        pid_t pid;
-        pid=fork();
-        if(pid<0)
-        {
-            printf("Fork failed");
-            return TRUE;
+        if(tokens!=NULL){
+            for (int i = 0; i < COMMANDS_LENGTH; ++i) {
+                if (strcmp(tokens[0], builtin_str[i]) == 0) //checking if the input is an inbuilt function and if so calling it
+                    return (*builtin_func[i])(tokens, history);                        // with the arguments provided with it
+            }
+
+            //else creating a Unix call and passing in the tokenized the arguments
+            pid_t pid;
+            pid=fork();
+            if(pid<0)
+            {
+                printf("Fork failed");
+                return TRUE;
+            }
+            else if(pid==0)
+            {
+                execvp(tokens[0],tokens);
+                perror("Error: ");
+                exit(EXIT_FAILURE);
+            }
+            else{
+                wait(NULL);
+                printf("Child complete\n");
+                return TRUE;
+            }
         }
-        else if(pid==0)
-        {
-            execvp(tokens[0],tokens);
-            perror("Error: ");
-            exit(EXIT_FAILURE);
-            return TRUE;
-        }
-        else{
-            wait(NULL);
-            printf("Child complete\n");
-            return TRUE;
-        }
+
+
 
     }
+
+    return TRUE;
 
 }

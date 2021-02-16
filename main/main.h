@@ -6,15 +6,15 @@
 #define CS210_SIMPLE_SHELL_MAIN_H
 #define TRUE 1
 #define FALSE 0
-#define ERROR -1
-#define HISTORY_SIZE 2
+#define ERROR (-1)
+#define HISTORY_SIZE 20
 #define NUMBER_OF_DECIMALS 10
 #define MAX_INPUT_LENGTH 514
 #define COMMANDS_LENGTH 6
 #define DELIMITER_SIZE 8
 #define MAX_TOKENS 50
 
-#define VERSION "Stage 3"
+#define VERSION "Stage 5"
 
 #endif //CS210_SIMPLE_SHELL_MAIN_H
 
@@ -27,14 +27,9 @@
 #include <dirent.h>
 #include <errno.h>
 
-#include "inbuilt.h"
 #include "tokenise.h"
+#include "inbuilt.h"
 #include "history_handler.h"
 #include "applycommand.h"
 #include "set_directory.h"
 #include "prompt.h"
-
-typedef struct HISTORY {
-	int number;
-	char** command;
-} History;
