@@ -36,7 +36,7 @@ int change_directory(char** tokens, char** history) {
             perror("Failed to change HOME, maybe it does not exist?");
             return ERROR;
         }
-        printf("Changed directory to HOME");
+        printf("Changed directory to HOME\n");
         return TRUE;
     }
     else {               // some parameter were given, execute cd with that param
