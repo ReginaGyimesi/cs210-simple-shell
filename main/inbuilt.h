@@ -13,6 +13,8 @@
 
 #endif //CS210_SIMPLE_SHELL_INBUILT_H
 
+
+
 /*
  * Function to change directory
  */
@@ -34,18 +36,38 @@ int change_directory(char** tokens, char** history) {
             perror("Failed to change HOME, maybe it does not exist?");
             return ERROR;
         }
+        printf("Changed directory to HOME");
         return TRUE;
-    } else {               // some parameter were given, execute cd with that param
+    }
+    else {               // some parameter were given, execute cd with that param
         if (chdir(tokens[1]) != 0) {  // disregarding other params, only using the next param after cd
             char *s = malloc(sizeof(char *) * 100);
             strcpy(s, "Failed to change to ");
             strcat(s, tokens[1]);
-            strcat(s, " Use case: cd [path/to/directory]");
+            strcat(s, ". Use case: cd [path/to/directory]");
             perror(s);
             free(s);
             return ERROR;
         }
+        else{
+            // checks if current directory is set to home
+            char cwd[PATH_MAX];
+            if (getcwd(cwd, sizeof(cwd)) == NULL) {
+                perror("getcwd() error");
+                return ERROR;
+            }
+
+            char* new_dir = malloc(sizeof(char*)*PATH_MAX);
+            strcpy(new_dir, "Changed directory to ");
+            strcat(new_dir, cwd);
+
+            printf("%s\n", new_dir);
+
+            free(new_dir);
+        }
     }
+
+
 
     return TRUE;
 }
@@ -114,6 +136,4 @@ int setpath(char** tokens, char** history)
 
 }
 
-int call_history_handler(char** tokens, char** history){
-    return check_history_type(tokens, history);
-}
+

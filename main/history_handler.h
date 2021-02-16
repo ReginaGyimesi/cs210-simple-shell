@@ -46,21 +46,21 @@ int add_to_history(char* input, char* history[]) {
     return TRUE;
 }
 
-int exec_number_history(int number, char* history[]) {
+char** exec_number_history(int number, char* history[]) {
 
     number--;
     if (number >= 0 && number <= (HISTORY_SIZE-1) && *(history[number]) != '\0') {
         char* line = malloc(sizeof(char) * MAX_INPUT_LENGTH);
         strcpy(line, history[number]);
         char** tokens = tokenise(line);
-        return apply_command(tokens, history);
+        return tokens;
     }
 
     fprintf(stderr, "History cannot be executed\n");
-    return ERROR;
+    return NULL;
 }
 
-int exec_minus_number_history(int number, char* history[]) {
+char** exec_minus_number_history(int number, char* history[]) {
 
     int current = 0;
     while (*(history[current]) != '\0') {
@@ -72,48 +72,20 @@ int exec_minus_number_history(int number, char* history[]) {
         char* line = malloc(sizeof(char) * MAX_INPUT_LENGTH);
         strcpy(line, history[current]);
         char** tokens = tokenise(line);
-        return apply_command(tokens, history);
+        return tokens;
     }
 
     fprintf(stderr, "History cannot be executed\n");
-    return ERROR;
-}
-
-/*
- * Creates a single string by combining tokens
- */
-char* create_input_from_tokens(char** tokens){    // NOW UNUSED
-
-    int i = 1;                                          // count the number of tokens
-    while(tokens[i++] != NULL){}
-
-    char* command = malloc(sizeof(char*) * i);     // allocate memory accordingly
-    if(tokens[1] != NULL){                              // if there are tokens initialize the string with the first token
-        strcpy(command, tokens[1]);
-        strcat(command, " ");
-    }
-
-    i = 2;
-    while(tokens[i] != NULL){                           // combine the rest of the tokens to the string
-        if(tokens[i+1] == NULL){
-            strcat(command, tokens[i]);
-        }
-        else{
-            strcat(command, tokens[i]);
-            strcat(command, " ");
-        }
-        i++;
-    }
-
-    return command;
+    return NULL;
 }
 
 /*
  * Returns the number from the !<no.> text.
  */
-int convert_number_to_int(char* text){
+int convert_number_to_int(const char* text){
     char pure_number_chars[NUMBER_OF_DECIMALS] = {'\0'};    // initialize sanitized array
     int flag = 0;
+    char** end_ptr = NULL;
 
     for(int i = 0; text[i] != '\0'; ++i){                   // fill array with numbers
         if(text[i]>='0' && text[i]<='9'){
@@ -122,20 +94,49 @@ int convert_number_to_int(char* text){
     }
 
     for(int i = 0; i < NUMBER_OF_DECIMALS; ++i){            // check that the array only contains numbers and there is no overflow
-        if((pure_number_chars[i] < '0' && pure_number_chars[i]!='\0') || (pure_number_chars[i] > '9' && pure_number_chars[i]!='\0') || (i == (NUMBER_OF_DECIMALS-1) && pure_number_chars[i]!='\0')){
+        if((pure_number_chars[i] < '0' && pure_number_chars[i]!='\0') || (pure_number_chars[i] > '9') || (i == (NUMBER_OF_DECIMALS-1) && pure_number_chars[i]!='\0')){
             fprintf(stderr, "Something went wrong during number conversion\n");
             return ERROR;
         }
     }
 
 
-    return atoi(pure_number_chars);
+    return (int)strtol(pure_number_chars, end_ptr, 10);
+}
+
+/*
+* Executes the most recent command in history
+*/
+char** exec_recent_history(char* history[]) {
+    if(*(history[0]) != '\0') {
+        return exec_minus_number_history(1, history);
+    }
+
+    fprintf(stderr, "No commands stored in recent history\n");
+    return NULL;
+}
+
+/*
+* Prints all commands stored in history
+*/
+int print_history(char* history[]) {
+    if(*(history[0]) != '\0') {
+        int current = 0;
+        while (*(history[current]) != '\0') {
+            printf("%d. %s\n", current+1, history[current]);
+            current++;
+        }
+        return TRUE;
+    }
+
+    fprintf(stderr, "No commands stored in history\n");
+    return ERROR;
 }
 
 /*
  * Function which decides what history command call
  */
-int check_history_type(char** tokens, char** history){
+char** check_history_type(char** tokens, char** history){
     char first_token[10];
     strcpy(first_token, tokens[0]);                         // storing the first token as single string
 
@@ -155,7 +156,7 @@ int check_history_type(char** tokens, char** history){
             free_history(history);
             make_history(history);
             printf("History has been reset!\n");
-            return TRUE;
+            return NULL;
         }
         else{
             fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
@@ -163,36 +164,7 @@ int check_history_type(char** tokens, char** history){
 
     }
 
-    return ERROR;
+    return NULL;
 
 
-}
-
-/*
-* Executes the most recent command in history
-*/
-int exec_recent_history(char* history[]) {
-    if(*(history[0]) != '\0') {
-        return exec_minus_number_history(1, history);
-    }
-
-    fprintf(stderr, "No commands stored in recent history\n");
-    return ERROR;
-}
-
-/*
-* Prints all commands stored in history
-*/
-int print_history(char* history[]) {
-    if(*(history[0]) != '\0') {
-        int current = 0;
-        while (*(history[current]) != '\0') {
-            printf("%d. %s\n", current+1, history[current]);
-            current++;
-        }
-        return TRUE;
-    }
-
-    fprintf(stderr, "No commands stored in history\n");
-    return ERROR;
 }
