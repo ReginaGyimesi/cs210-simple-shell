@@ -16,6 +16,7 @@ int main()
     welcome();
     set_directory();
     make_history(history);
+    load_history(history);
 
     
     do {
