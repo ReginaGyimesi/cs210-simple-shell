@@ -182,3 +182,26 @@ char** check_history_type(char** tokens, char** history){
 
 
 }
+
+/*
+ * Loads history from .hist_list file in home directory
+ */
+int load_history(char* history[]) {
+    char *filepath = strcat(getenv("HOME"), "/.hist_list");
+    FILE *file = fopen(filepath, "r+");
+    char line[MAX_INPUT_LENGTH];
+
+    if(!file) {
+        fprintf(stderr, "History file could not be located\n");
+        return ERROR;
+    }
+    else {
+        while(fgets(line, sizeof(line), file)) {
+            add_to_history(line, history);
+        }
+    }
+
+    fclose(file);
+    
+    return TRUE;
+}
