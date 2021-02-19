@@ -1,3 +1,29 @@
+# Stage 8
+
+## Tasks
+Persistent aliases
+
+Keeping persistent aliases means that the aliases are saved on file and loaded between activations of the shell. 
+For this purpose,a `.aliases` file can be used.
+
+**Save aliases**
+
+You  just  write  the  current  contents  of  the  aliases  data  structure  into  the  `.aliases`  file, overwriting  its  
+previous  contents,  just  before  the  shell  exits  (Note:  it doesn’t matter whether the history or the aliases are saved 
+first). It is probably a good idea to follow a fairly simple format for this file, e.g. ‘alias aliased command’ per line.
+
+**Load aliases**
+
+When your shell starts it will try to open the file `.aliases` (in the user’s home directory),
+read its contents and initialise the aliases data structure with them. In  your shell, you  can simplify  matters  by  considering  that  each  command  line  is  at most 512 characters long. 
+In the case of the aliases file,this would mean that you can use the `fgets` function to read each line. 
+Then you know that the first token is the alias itself and the rest of the tokens the aliased command.
+
+1. Create `int save_aliases(Alias* head)`. Save format: `alias <key> <command>`. Return TRUE or ERROR accordingly. Call 
+   before exiting the shell.
+2. Create `int load_aliases()`. Call before starting the shell.
+
+
 # Stage 7
 
 ## Tasks
