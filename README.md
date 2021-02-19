@@ -1,35 +1,62 @@
+# Stage 7
+
+## Tasks
+Setting  up  aliases, removing  aliases, invoking  aliases,  and  printing  all aliases
+
+In  general, aliasing means that the shell can use a different label (usually simpler) to invoke a command. 
+For example, users more familiar with a windows environment will set an alias for `dir` to be `ls –lF` in a Linux/Unix environment. 
+In this case when the user types in `dir` then the shell will execute `ls –lF`. 
+This will be the case until the user removes the alias by using the command `unalias dir`. As was the case in the example, 
+quite often the aliased command will also include parameters. Note also that the alias could also work with additional parameters. 
+For example, in the case of the `dir` above, the user could also type in `dir <a_directory>` and will execute `ls –lF <a directory>`, etc.
+
+Note that the same command can be aliased with a number of different aliases, but of course, 
+each  alias  should  map  to  only  one  command. If  the  same  alias  is  used  again your shell 
+should override the previous one, providing an appropriate message. Note also that there is nothing to 
+prevent a user from using a built-in command or an external program name as an alias. Your shell should allow this. 
+In this case,the shell will  invoke  the  aliased  command  until  the  alias  is  removed  
+(i.e.  when  processing  a command  you  first  check  for  aliases  and  then  for  built-in  commands  and  external programs).
+
+Note also that at this stage it is not possible to alias an alias, 
+only built-in commands and external programs. This basically means that you can check for an alias 
+only once, and  after  that point,you  treat  the  aliased  command  as  a  normal  
+one  (not  an  alias) provided by the user.At this stage,you can also alias a history 
+invocation. This means that you don’t have to check whether it is a history invocation after you checked for an alias.
+
+[Linked List](https://www.learn-c.org/en/Linked_lists)
+
+1. Create `Alias` struct in `main.h`. Fields: `char* key`, `char* command`, `struct Alias* next`. Create an `Alias` variable in `main.c`
+2. Create `alias_handler.h`:
+    1. Create `int add_alias(Alias* head, char* key, char* command)`. Pushing an alias element to the header. Check is key already exists, 
+       if yes, override it with the new command. Return TRUE or ERROR. Check that NULL values are not saved. If more then 20 is in the list, return error (full)
+    2. Create `int remove_alias(Alias* head, char* key)`. Removing a specific alias from the list. Check for NULL values, if the key exists, remove
+    it accordingly, keeping the lists integrity.
+    3. Create `char* invoke_alias(Alias* head, char* key)`. Gets the command, from the list and returns it. Return NULL, if no command exists. 
+    4. Create `int print_alias(Alias* head)`, printing out the current aliases, with the key-value pairs. If the list empty, print error.
+    8. Include functions in `apply_command.h`, if command `alias` -> `add_alias()`, if `unalias` -> `remove_alias()`
+
 # Stage 6
 
 ## Tasks
+Keeping a persistent history means that the history is saved on file and loaded between 
+activations  of  the  shell.  For  this purpose,a `.hist_list`  file can  be used.
+(Note:  that  in Unix-type systems files starting with `.` are considered hidden in that they are not shown in directory listings unless the user explicit asks for them).
 
-Keeping a persistent history means that the history is saved on file and loaded between
-activations of the shell. For this purpose, a `.hist_list` file can be used. (Note: that in
-Unix-type systems files starting with . are considered hidden in that they are not shown
-in directory listings unless the user explicit asks for them).
+**Save history**
 
-Save history
-You just write the current contents of the history data structure into the `.hist_list` file,
-overwriting its previous contents, just before the shell exits.
-It is probably a good idea to follow a fairly simple format for this file, e.g.
-‘number command’ per line.
-To read or write a file in a C program you need to first open it using the `fopen()` function.
-Files are opened in a particular mode, i.e. read, write, read/write, append. Files are then
-processed using similar functions as those you have for processing standard input and
-output, typically with an f in front of the function name and a file pointer as one of the
-parameters. For example, scanf becomes fscanf, gets becomes fgets, printf becomes
-fprintf, etc.
+You just write the current contents of the history data structure into the `.hist_list` file, overwriting its previous contents, 
+just before the shell exits. It is probably a good idea to follow a fairly simple format for this file, e.g. ‘numbercommand’ per line.
 
-Load history
-When your shell starts it will try to open the file `.hist_list` (in the user’s home directory),
-read its contents and initialise the history with them.
-In your shell, you can simplify matters by considering that each command line is at
-most 512 characters long. In the case of the history file, this would mean that you can
-use the fgets function to read each line. Then you know that the first token is the
-command number.
+**Load history**
 
-In `history_handler.h` create:
-1. `int save_history(char* history[])`
-2. `int load_history(char* history[])`
+When your shell starts it will try to open the file `.hist_list` (in the user’s home directory), 
+read its contents and initialise the history with them. In your shell, you  can  simplify  matters  by  
+considering  that  each  command  line  is  at most 512 characters long. In the case of the history file,
+this would mean that you can use  the `fgets` function  to  read  each  line.  Then  you know  that  the  first  
+token  is  the command number.
+
+1. Create `int save_history(char* history)` in `history_handler.h`
+2. Create `int load_history()` in `history_handler.h`
 
 # Stage 5
 
