@@ -3,12 +3,12 @@
 ## Tasks
 
 Keeping a persistent history means that the history is saved on file and loaded between
-activations of the shell. For this purpose, a .hist_list file can be used. (Note: that in
+activations of the shell. For this purpose, a `.hist_list` file can be used. (Note: that in
 Unix-type systems files starting with . are considered hidden in that they are not shown
 in directory listings unless the user explicit asks for them).
 
 Save history
-You just write the current contents of the history data structure into the .hist_list file,
+You just write the current contents of the history data structure into the `.hist_list` file,
 overwriting its previous contents, just before the shell exits.
 It is probably a good idea to follow a fairly simple format for this file, e.g.
 ‘number command’ per line.
@@ -20,16 +20,16 @@ parameters. For example, scanf becomes fscanf, gets becomes fgets, printf become
 fprintf, etc.
 
 Load history
-When your shell starts it will try to open the file .hist_list (in the user’s home directory),
+When your shell starts it will try to open the file `.hist_list` (in the user’s home directory),
 read its contents and initialise the history with them.
 In your shell, you can simplify matters by considering that each command line is at
 most 512 characters long. In the case of the history file, this would mean that you can
 use the fgets function to read each line. Then you know that the first token is the
 command number.
 
-In history_handler create:
-1. int save_history(char* history[]);
-2. int load_history(char* history[]);
+In `history_handler.h` create:
+1. `int save_history(char* history[])`
+2. `int load_history(char* history[])`
 
 # Stage 5
 
