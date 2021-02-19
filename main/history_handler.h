@@ -184,6 +184,22 @@ char** check_history_type(char** tokens, char** history){
 }
 
 /*
+ * Creates or opens .hist_list file, saves every line of history to it and closes
+ * when there is no more to write.
+ */
+int save_history(char* history[]) {
+    FILE *f;
+    f = fopen(".hist_list", "w+");
+
+    int i = 0;
+    while(strcmp(history[i], "") != 0){ // checks to not to print empty history
+        fprintf(f, "%s\n", history[i]);
+        i++;
+    }
+    fclose(f);
+}
+
+/*
  * Loads history from .hist_list file in home directory
  */
 int load_history(char* history[]) {
