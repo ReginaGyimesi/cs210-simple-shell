@@ -12,7 +12,7 @@ You just write the current contents of the history data structure into the `.his
 overwriting its previous contents, just before the shell exits.
 It is probably a good idea to follow a fairly simple format for this file, e.g.
 ‘number command’ per line.
-To read or write a file in a C program you need to first open it using the fopen() function.
+To read or write a file in a C program you need to first open it using the `fopen()` function.
 Files are opened in a particular mode, i.e. read, write, read/write, append. Files are then
 processed using similar functions as those you have for processing standard input and
 output, typically with an f in front of the function name and a file pointer as one of the
