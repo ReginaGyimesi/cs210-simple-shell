@@ -33,7 +33,7 @@ invocation. This means that you don’t have to check whether it is a history in
     it accordingly, keeping the lists integrity.
     3. Create `char* invoke_alias(Alias* head, char* key)`. Gets the command, from the list and returns it. Return NULL, if no command exists. 
     4. Create `int print_alias(Alias* head)`, printing out the current aliases, with the key-value pairs. If the list empty, print error.
-    8. Include functions in `apply_command.h`, if command `alias` -> `add_alias()`, if `unalias` -> `remove_alias()`
+    8. Include functions in `apply_command.h`, if command `alias <key> <value>` -> `add_alias()`, if `unalias` -> `remove_alias()`, if `alias` -> `print_alias()`
 
 # Stage 6
 
