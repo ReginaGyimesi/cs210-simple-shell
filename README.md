@@ -1,39 +1,3 @@
-# Finalisation
-
-## Tasks
-Testing, commenting and clean up
-
-1. Everyone needs to go through the test pdf, trying our shell (including different environments)
-2. Comment code, that you wrote
-3. Clean up code or refactor to improve performance
-
-# Stage 9
-
-## Tasks
-Enhanced aliases
-
-In this stage, you should add to your implementation of the alias command the ability
-to alias aliases and to alias history invocations.
-
-The main challenge here is that your input handling should keep on replacing the
-command token with the aliased command or command from history until you end up
-with a built-in command or an external program or rubbish (i.e. no more substitutions
-can be performed). In doing so, you should be careful about circular dependencies, i.e.
-scenario like `alias a b`, `alias b a`, or `alias a !x`, where command number `x` in history is a,
-etc. An easy way to deal with this is to set a limit on the number of substitutions carried
-out (e.g. 3) and give an error when that limit is exceeding. A more sophisticated way to
-do so would be to remember the substitutions you carried out (using something an array
-or preferably something dynamic like a linked list) and before carrying out a
-substitution check whether the same label was encountered before in which case you
-give an error.
-
-Remember that aliases and history invocation may involve parameters, not just simple
-commands, so these should be properly concatenated to build the final command string
-to be parsed for execution.
-
-1. Either recursively or incrementally check for tokens to apply commands. 
-
-
 # Stage 8
 
 ## Tasks
