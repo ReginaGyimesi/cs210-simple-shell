@@ -276,12 +276,12 @@ char** check_history_type(char** tokens, char** history, int* front, int* last){
  */
 int save_history(char* history[], int* front, int* rear) {
     int number_printed = 0;         // for bug fixing
-
     int i;
 
-    FILE *f;
-    char *filepath = getenv("HOME");
-    f = fopen(filepath, "w+");
+    char *filepath = malloc(sizeof(char) * MAX_INPUT_LENGTH);
+    strcpy(filepath, getenv("HOME"));
+    strcat(filepath, "/.hist_list");
+    FILE *file = fopen(filepath, "w+");
 
     for(i = *front; i != *rear; ++i){
         if(i == HISTORY_SIZE){
@@ -293,22 +293,19 @@ int save_history(char* history[], int* front, int* rear) {
         }
 
         if(strcmp(history[i], "") != 0 && strcmp(history[i], "\n") != 0 && strcmp(history[i], "\0") != 0){
-            fprintf(f, "%s", history[i]);
+            fprintf(file, "%s", history[i]);
         }
         else{
             number_printed++;
             continue;
         }
 
-
         number_printed++;
-
     }
 
-    fprintf(f, "%s", history[i]);
-
-    fclose(f);
-
+    fprintf(file, "%s", history[i]);
+    fclose(file);
+    free(filepath);
     return TRUE;
 }
 
@@ -318,7 +315,10 @@ int save_history(char* history[], int* front, int* rear) {
  * Loads history from .hist_list file in home directory
  */
 int load_history(char* history[],int* front, int* rear) {
-    char *filepath = strcat(getenv("HOME"), "/.hist_list");
+    
+    char *filepath = malloc(sizeof(char) * MAX_INPUT_LENGTH);
+    strcpy(filepath, getenv("HOME"));
+    strcat(filepath, "/.hist_list");
     FILE *file = fopen(filepath, "r+");
     char line[MAX_INPUT_LENGTH];
 
@@ -333,6 +333,7 @@ int load_history(char* history[],int* front, int* rear) {
     }
 
     fclose(file);
-
+    free(filepath);
     return TRUE;
 }
+
