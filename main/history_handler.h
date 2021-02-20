@@ -150,33 +150,23 @@ char** exec_minus_number_history(int number, char* history[], int *last) {
  * Returns the number from the !<no.> text.
  */
 int convert_number_to_int(const char* text){
-    char pure_number_chars[NUMBER_OF_DECIMALS] = {'\0'};    // initialize sanitized array
-    int flag = 0;
-    char** end_ptr = NULL;
-
-    for(int i = 0; text[i] != '\0'; ++i){                   // fill array with numbers
-        if(text[i] == '!' && i == 0) continue;
-        if(text[i] == '-' && i == 1) continue;
-        if((text[i]>='0' && text[i]<='9') || text[i] == '\0'){
-            pure_number_chars[flag++] = text[i];
+    
+    int number = 0;
+    int offset = '0';   // offset between ASCII value of number and actual number
+    
+    for (int i = 1; text[i] != '\0'; i++) {
+        if (text[i] == '-' && i == 1) continue;
+        if (text[i] >= '0' && text[i] <= '9') {
+            number = (number * 10) + (text[i] - offset);
+            if (number < 0) return ERROR;    // overflow protection
         }
-        else{
-            fprintf(stderr, "Something went wrong during number conversion\n");
+        else {
             fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
             return ERROR;
         }
     }
-
-    for(int i = 0; i < NUMBER_OF_DECIMALS; ++i){            // check that the array only contains numbers and there is no overflow
-        if((pure_number_chars[i] < '0' && pure_number_chars[i]!='\0') || (pure_number_chars[i] > '9') || (i == (NUMBER_OF_DECIMALS-1) && pure_number_chars[i]!='\0')){
-            fprintf(stderr, "Something went wrong during number conversion\n");
-            fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
-            return ERROR;
-        }
-    }
-
-
-    return (int)strtol(pure_number_chars, end_ptr, 10);
+    
+    return number;
 }
 
 /*
