@@ -33,3 +33,9 @@
 #include "applycommand.h"
 #include "set_directory.h"
 #include "prompt.h"
+
+struct Alias {
+	char *key;
+	char *command;
+	struct Alias *next;
+};
