@@ -10,7 +10,7 @@
 #endif //CS210_SIMPLE_SHELL_HISTORY_HANDLER_H
 
 void make_history(char** dest) {
-    
+
     for (int k = 0; k < HISTORY_SIZE; k++) {
         dest[k] = malloc(sizeof(char) * MAX_INPUT_LENGTH);
         dest[k][0] = '\0';
@@ -25,54 +25,121 @@ void free_history(char** dest) {
     dest = NULL;
 }
 
-int add_to_history(char* input, char* history[]) {
-
-    int i = 0;
-    while (i < HISTORY_SIZE && *(history[i]) != '\0') {
-        i++;
-    }
-
-    if (i == HISTORY_SIZE) {    // array is full
-        char *temp = history[0];
-        for (int j = 1; j <= (HISTORY_SIZE-1); j++) {
-            history[j - 1] = history[j];
+int is_history_empty(char** history){
+    int i;
+    for(i = 0; i < HISTORY_SIZE; ++i){
+        if(*history[i] != '\0'){
+            return FALSE;
         }
-        history[HISTORY_SIZE-1] = temp;
-        strcpy(history[HISTORY_SIZE-1], input);
-    } else {
-        strcpy(history[i], input);
     }
 
     return TRUE;
 }
 
-char** exec_number_history(int number, char* history[]) {
+int is_history_full(int* front, int *rear){
+    // The array is full if:
+    //      - the rear is the last available position
+    //      - the rear and the front%HISTORY_SIZE are the same, the two flags are at the same position in the array
+    if ((*front == 0 && *rear == HISTORY_SIZE-1) || (*rear == (*front-1)%(HISTORY_SIZE-1))){
+        return TRUE;
+    }
+    return FALSE;
+}
 
-    number--;
-    if (number >= 0 && number <= (HISTORY_SIZE-1) && *(history[number]) != '\0') {
-        char* line = malloc(sizeof(char) * MAX_INPUT_LENGTH);
-        strcpy(line, history[number]);
-        char** tokens = tokenise(line);
-        return tokens;
+int add_to_history(char* input, char* history[],int* front, int *rear) {
+
+    if(input == NULL || strcmp(input, "\n") == 0 || strcmp(input, "\0") == 0){
+        fprintf(stderr, "Input error, not adding to history");
+        return ERROR;
+    }
+
+    if (is_history_full(front, rear)){  // in a queue we wouldnt overwrite values, but here it can be done
+        *front += 1;
+        if(*front == HISTORY_SIZE){     // the front reached the end of the array, so we reset it to the first
+            *front = 0;
+        }
+    }
+
+    if(*front == -1){                                   // First element
+        *front = 0;
+        *rear = 0;
+        strcpy(history[*rear], input);
+    }
+    else if(*rear == HISTORY_SIZE-1 && *front != 0){    // Rear reached the end, reset to the first element
+        *rear = 0;
+        strcpy(history[*rear], input);
+    }
+    else{                                               // Rear is somewhere between the first and last position
+        *rear += 1;
+        strcpy(history[*rear], input);
+    }
+
+    if(history[*rear] == NULL){
+        fprintf(stderr, "Nothing has been added to the history!");
+        return ERROR;
+    }
+
+    return TRUE;
+}
+
+char** exec_number_history(int number, char* history[], int *front) {
+
+    int temp = 0;
+    int i;
+
+    number--;       // Decreasing to make it equal to array index representation
+
+    if (number >= 0 && number <= (HISTORY_SIZE-1)) {        // Checking if number is between the available number of commands
+
+        for(i = *front; temp < number; ++i){                // From here we need to find the index we are looking for
+            if(i == HISTORY_SIZE){                          // Because 'i' is different then the acual order, we have to match it
+                i = 0;
+            }
+            temp++;
+        }
+
+        if(i == HISTORY_SIZE){                              // This is a edge case, because the loop, does not set i to
+            i = 0;                                          // 0 if, temp becomes equal to the number and we reached the end of the array
+        }
+
+        if(*history[i] != '\0'){                            // Copying and tokenizing the history command
+            char* line = malloc(sizeof(char) * MAX_INPUT_LENGTH);
+            strcpy(line, history[i]);
+            char** tokens = tokenise(line);
+            return tokens;
+        }
     }
 
     fprintf(stderr, "History cannot be executed\n");
     return NULL;
 }
 
-char** exec_minus_number_history(int number, char* history[]) {
+char** exec_minus_number_history(int number, char* history[], int *last) {
 
-    int current = 0;
-    while (current < HISTORY_SIZE && *(history[current]) != '\0') {
-        current++;
-    }
-    current = current - number;
-    
-    if (current >= 0 && current <= (HISTORY_SIZE-1) && *(history[current]) != '\0') {
-        char* line = malloc(sizeof(char) * MAX_INPUT_LENGTH);
-        strcpy(line, history[current]);
-        char** tokens = tokenise(line);
-        return tokens;
+    int temp = 0;
+    int i;
+
+    number--;       // Decreasing to make it equal to array index representation
+
+    if (number >= 0 && number <= (HISTORY_SIZE-1)) {        // Checking if number is between the available number of commands
+
+        for(i = *last; temp < number; --i){                // From here we need to find the index we are looking for
+            if(i == -1){                          // Because 'i' is different then the acual order, we have to match it
+                i = HISTORY_SIZE-1;
+            }
+            temp++;
+        }
+
+        if(i == -1){                              // This is a edge case, because the loop, does not set i to
+            i = HISTORY_SIZE-1;                                          // 0 if, temp becomes equal to the number and we reached the end of the array
+        }
+
+        if(*history[i] != '\0'){                            // Copying and tokenizing the history command
+            char* line = malloc(sizeof(char) * MAX_INPUT_LENGTH);
+            strcpy(line, history[i]);
+            char** tokens = tokenise(line);
+            return tokens;
+        }
     }
 
     fprintf(stderr, "History cannot be executed\n");
@@ -115,9 +182,9 @@ int convert_number_to_int(const char* text){
 /*
 * Executes the most recent command in history
 */
-char** exec_recent_history(char* history[]) {
+char** exec_recent_history(char* history[],int *last) {
     if(*(history[0]) != '\0') {
-        return exec_minus_number_history(1, history);
+        return exec_minus_number_history(1, history,last);
     }
 
     fprintf(stderr, "No commands stored in recent history\n");
@@ -127,44 +194,64 @@ char** exec_recent_history(char* history[]) {
 /*
 * Prints all commands stored in history
 */
-int print_history(char** tokens, char* history[]) {
+int print_history(char** tokens, char* history[],int* front, int* rear) {
+
+    int number_printed = 0;         // for bug fixing
+
     if(history == NULL || *history == NULL || tokens[1] != NULL){
         fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
         return ERROR;
     }
 
-    if(*(history[0]) != '\0') {
-        int current = 0;
-        while (current < HISTORY_SIZE && *(history[current]) != '\0') {
-            printf("%d. %s", current+1, history[current]);
-            current++;
+    if(!is_history_empty(history)){
+        int i;
+        int index = 1;
+        for(i = *front; i != *rear; ++i){
+            if(i == HISTORY_SIZE){
+                i = 0;
+            }
+
+            if(number_printed == HISTORY_SIZE){
+                return TRUE;
+            }
+
+            printf("%d. %s", index++, history[i]);
+
+            number_printed++;
         }
+
+        if(number_printed<HISTORY_SIZE){
+            printf("%d. %s", index++, history[i]);
+        }
+
+
         return TRUE;
     }
 
     fprintf(stderr, "No commands stored in history\n");
-    fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
     return ERROR;
 }
+
+
 
 /*
  * Function which decides what history command call
  */
-char** check_history_type(char** tokens, char** history){
+char** check_history_type(char** tokens, char** history, int* front, int* last){
     char first_token[10];
     strcpy(first_token, tokens[0]);                         // storing the first token as single string
 
     if(first_token[0] == '!'){                                  // checking string chars one-by-one
         if(first_token[1] == '!' && first_token[2] == '\0'){
-            return exec_recent_history(history);
+            return exec_recent_history(history,last);
         }
         else if(first_token[1] == '-'){
             int number = convert_number_to_int(tokens[0]);
-            return exec_minus_number_history(number, history);
+            return exec_minus_number_history(number, history, last);
         }
         else if(first_token[1] >= '0' && first_token[1] <= '9'){
             int number = convert_number_to_int(tokens[0]);
-            return exec_number_history(number, history);
+            return  exec_number_history(number, history, front);
         }
         else if(strcmp(first_token, "!clear") == 0){
             free_history(history);
@@ -187,22 +274,50 @@ char** check_history_type(char** tokens, char** history){
  * Creates or opens .hist_list file, saves every line of history to it and closes
  * when there is no more to write.
  */
-int save_history(char* history[]) {
-    FILE *f;
-    f = fopen(".hist_list", "w+");
+int save_history(char* history[], int* front, int* rear) {
+    int number_printed = 0;         // for bug fixing
 
-    int i = 0;
-    while(strcmp(history[i], "") != 0){ // checks to not to print empty history
-        fprintf(f, "%s\n", history[i]);
-        i++;
+    int i;
+
+    FILE *f;
+    char *filepath = getenv("HOME");
+    f = fopen(filepath, "w+");
+
+    for(i = *front; i != *rear; ++i){
+        if(i == HISTORY_SIZE){
+            i = 0;
+        }
+
+        if(number_printed == HISTORY_SIZE){
+            return TRUE;
+        }
+
+        if(strcmp(history[i], "") != 0 && strcmp(history[i], "\n") != 0 && strcmp(history[i], "\0") != 0){
+            fprintf(f, "%s", history[i]);
+        }
+        else{
+            number_printed++;
+            continue;
+        }
+
+
+        number_printed++;
+
     }
+
+    fprintf(f, "%s", history[i]);
+
     fclose(f);
+
+    return TRUE;
 }
+
+
 
 /*
  * Loads history from .hist_list file in home directory
  */
-int load_history(char* history[]) {
+int load_history(char* history[],int* front, int* rear) {
     char *filepath = strcat(getenv("HOME"), "/.hist_list");
     FILE *file = fopen(filepath, "r+");
     char line[MAX_INPUT_LENGTH];
@@ -213,11 +328,11 @@ int load_history(char* history[]) {
     }
     else {
         while(fgets(line, sizeof(line), file)) {
-            add_to_history(line, history);
+            add_to_history(line, history, front, rear);
         }
     }
 
     fclose(file);
-    
+
     return TRUE;
 }

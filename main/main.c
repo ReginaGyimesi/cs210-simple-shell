@@ -12,29 +12,30 @@ int main()
     char *start_path = getenv("PATH"); // initial path stored
     char* history[20];
 
+    int front, rear;
+    front = rear = -1;
 
     welcome();
     set_directory();
     make_history(history);
-    save_history(history);
-    load_history(history);
+    load_history(history, &front, &rear);
 
     
     do {
 
         print_prompt();
         line = read_input();
-        if (line != NULL && line[0] != '\0' && line[0] != '!')
-            add_to_history(line, history);
+        if (line != NULL && line[0] != '\0' && line[0] != '\n' && line[0] != '!')
+            add_to_history(line, history, &front, &rear);
 
         args = tokenise(line);
 
-        status = apply_command(args, history);
-
+        status = apply_command(args, history,&front, &rear);
         free(line);
         free(args);
     } while (status);
-    
+
+    save_history(history, &front, &rear);
     free_history(history); // later on, the history will be saved in a separate file
     setenv("PATH", start_path, 1); // initial path restored
     printf("Path is restored to %s\n",getenv("PATH"));

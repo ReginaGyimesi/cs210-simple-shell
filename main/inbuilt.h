@@ -18,7 +18,7 @@
 /*
  * Function to change directory
  */
-int change_directory(char** tokens, char** history) {
+int change_directory(char** tokens, char** history, int* front, int* rear) {
 
     // initial error checks
     if (tokens == NULL || *tokens == NULL || tokens[0] == NULL) {
@@ -78,7 +78,7 @@ int exit1()
     return FALSE;
 }
 
-int getpath(char** tokens, char** history)
+int getpath(char** tokens, char** history, int* front, int* rear)
 {
     if(tokens[1] == NULL){
         const char *s = getenv("PATH");
@@ -91,7 +91,7 @@ int getpath(char** tokens, char** history)
 
 }
 
-int setpath(char** tokens, char** history)
+int setpath(char** tokens, char** history, int* front, int* rear)
 {
 
     if(tokens[1]==NULL||tokens[2]!=NULL)
