@@ -28,6 +28,7 @@ int change_directory(char** tokens, char** history, int* front, int* rear) {
 
     if (tokens[1] == NULL) { // no parameter were given, set to user's home directory
         if (chdir(getenv("HOME")) != 0) {
+            printf("%s", getenv("HOME"));
             perror("Failed to change HOME, maybe it does not exist?");
             return ERROR;
         }
