@@ -9,7 +9,7 @@
 
 #endif //CS210_SIMPLE_SHELL_APPLYCOMMAND_H
 
-int apply_command(char** tokens, char** history) {
+int apply_command(char** tokens, char** history,int* front, int* rear) {
 
     char *builtin_str[] = {
             "exit",
@@ -19,7 +19,7 @@ int apply_command(char** tokens, char** history) {
             "history"
     };
 
-    int (*builtin_func[]) (char **, char**) = {
+    int (*builtin_func[]) (char **, char**, int*, int*) = {
             &exit1,
             &getpath,
             &setpath,
@@ -41,13 +41,13 @@ int apply_command(char** tokens, char** history) {
     else
     {
         if((*tokens)[0] == '!'){                        // check if history command
-            tokens = check_history_type(tokens, history);
+            tokens = check_history_type(tokens, history, front, rear);
         }
 
         if(tokens!=NULL){
             for (int i = 0; i < COMMANDS_LENGTH; ++i) {
                 if (strcmp(tokens[0], builtin_str[i]) == 0) //checking if the input is an inbuilt function and if so calling it
-                    return (*builtin_func[i])(tokens, history);                        // with the arguments provided with it
+                    return (*builtin_func[i])(tokens, history, front, rear);                         // with the arguments provided with it
             }
 
             //else creating a Unix call and passing in the tokenized the arguments

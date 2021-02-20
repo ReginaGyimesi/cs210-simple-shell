@@ -14,7 +14,7 @@
 #define DELIMITER_SIZE 8
 #define MAX_TOKENS 50
 
-#define VERSION "Stage 5"
+#define VERSION "Stage 6"
 
 #endif //CS210_SIMPLE_SHELL_MAIN_H
 
