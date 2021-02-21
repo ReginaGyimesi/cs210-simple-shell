@@ -92,7 +92,7 @@ char** exec_number_history(int number, char* history[], int *front) {
     if (number >= 0 && number <= (HISTORY_SIZE-1)) {        // Checking if number is between the available number of commands
 
         for(i = *front; temp < number; ++i){                // From here we need to find the index we are looking for
-            if(i == HISTORY_SIZE){                          // Because 'i' is different then the acual order, we have to match it
+            if(i == HISTORY_SIZE){                          // Because 'i' is different then the actual order, we have to match it
                 i = 0;
             }
             temp++;
