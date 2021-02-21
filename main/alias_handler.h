@@ -9,10 +9,17 @@
 
 #endif //CS210_SIMPLE_SHELL_ALIAS_HANDLER_H
 
+struct Alias {
+	char *key;
+	char *command;
+	struct Alias *next;
+};
+
 struct Alias *head = NULL;
 
 int alias_length() {
 	int length = 0;
+	
 	struct Alias *ptr = head;
 
 	while(ptr != NULL) {
@@ -55,12 +62,11 @@ int add_alias(char* key, char* command) {
 		search->command = command;
 		return TRUE;
 	}
-	else {
-		struct Alias *new = (struct Alias*)malloc(sizeof(struct Alias));
-		new->key = key;
-		new->command = command;
-		new->next = head;
-		head = new;
-		return TRUE;
-	}
+
+	struct Alias *new = (struct Alias*)malloc(sizeof(struct Alias));
+	new->key = key;
+	new->command = command;
+	new->next = head;
+	head = new;
+	return TRUE;
 }
