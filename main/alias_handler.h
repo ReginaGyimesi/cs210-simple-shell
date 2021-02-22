@@ -13,61 +13,72 @@ struct Alias {
 	char *key;
 	char *command;
 	struct Alias *next;
-};
+}; // Alias struct defined
 
-struct Alias *head = NULL;
+struct Alias *head = NULL; // Head of list initialised
 
+/*
+ * Calculates number of aliases contained in linked list.
+ */
 int alias_length() {
 	int length = 0;
 	
-	struct Alias *ptr = head;
+	struct Alias *ptr = head; // Pointer initialised
 
 	while(ptr != NULL) {
 		ptr = ptr->next;
 		length++;
-	}
+	} // Iterate and count through list using pointer
 
 	return length;
 }
 
+/*
+ * Searches for key in alias list, null if not present,
+ * otherwise returns alias struct in which key is stored.
+ */
 struct Alias *alias_search(char* key) {
-	struct Alias *ptr = head;
+	struct Alias *ptr = head; // Pointer initialised at head of list
 
 	if(head == NULL) {
 		return NULL;
-	}
+	} // Return NULL if list empty
 	else {
 		while(ptr->key != key) {
 			if(ptr->next == NULL) {
 				return NULL;
-			}
+			} // Key not found in list
 			else {
 				ptr = ptr->next;
-			}
+			} // Iterate through list using pointer
 		}
 		
-		return ptr;
+		return ptr; // Return alias if key found, otherwise return NULL
 	}	
 }
 
+/*
+ * Adds alias to linked list, returns error if limit of 20 aliases exceeded,
+ * overwrites existing aliases with new command.
+ */
 int add_alias(char* key, char* command) {
 	if(alias_length() > 20) {
 		fprintf(stderr, "Maximum amount of 20 stored aliases exceeded. Please delete or overwrite an alias to continue\n");
         return ERROR;
-	}
+	} // Error if limit of 20 aliases exceeded
 
 	struct Alias *search = alias_search(key);
 
 	if(search != NULL) {
 		search->command = command;
 		return TRUE;
-	}
+	} // Existing alias overwritten
 
 	struct Alias *new = (struct Alias*)malloc(sizeof(struct Alias));
 	new->key = key;
 	new->command = command;
 	new->next = head;
-	head = new;
+	head = new; // Otherwise new alias added
 	return TRUE;
 }
 
