@@ -116,7 +116,7 @@ char* invoke_alias(char* key) {
 
     if (alias_search(key) == NULL) { //Checks if the command exists
         fprintf(stderr, "Cannot find command.");
-        return NULL;
+        return key;
 
     }
     else {
