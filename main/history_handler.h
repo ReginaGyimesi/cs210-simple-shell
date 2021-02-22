@@ -53,7 +53,7 @@ int add_to_history(char* input, char* history[],int* front, int *rear) {
         return ERROR;
     }
 
-    if (is_history_full(front, rear)){  // in a queue we wouldnt overwrite values, but here it can be done
+    if (is_history_full(front, rear)){  // in a queue we wouldn't overwrite values, but here it can be done
         *front += 1;
         if(*front == HISTORY_SIZE){     // the front reached the end of the array, so we reset it to the first
             *front = 0;
@@ -124,7 +124,7 @@ char** exec_minus_number_history(int number, char* history[], int *last) {
     if (number >= 0 && number <= (HISTORY_SIZE-1)) {        // Checking if number is between the available number of commands
 
         for(i = *last; temp < number; --i){                // From here we need to find the index we are looking for
-            if(i == -1){                          // Because 'i' is different then the acual order, we have to match it
+            if(i == -1){                          // Because 'i' is different then the actual order, we have to match it
                 i = HISTORY_SIZE-1;
             }
             temp++;
