@@ -35,8 +35,3 @@
 #include "prompt.h"
 #include "alias_handler.h"
 
-struct Alias {
-	char *key;
-	char *command;
-	struct Alias *next;
-};

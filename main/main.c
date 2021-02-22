@@ -19,7 +19,7 @@ int main()
     set_directory();
     make_history(history);
     load_history(history, &front, &rear);
-    printf("%s\n", getenv("HOME"));
+
     do {
 
         print_prompt();

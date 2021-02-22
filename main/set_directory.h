@@ -13,7 +13,7 @@ int set_directory() {
     if (chdir(getenv("HOME")) != 0) {
         perror("Failed");
     }
-    printf("%s\n", getenv("HOME"));
+
     // checks if current directory is set to home
     char cwd[PATH_MAX];
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
