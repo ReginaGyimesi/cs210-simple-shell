@@ -4,12 +4,14 @@
 // Created by Balázs Szalay on 2021. 02. 01.
 */
 
+
+
 #ifndef CS210_SIMPLE_SHELL_APPLYCOMMAND_H
 #define CS210_SIMPLE_SHELL_APPLYCOMMAND_H
 
 #endif //CS210_SIMPLE_SHELL_APPLYCOMMAND_H
 
-int apply_command(char** tokens, char** history,int* front, int* rear) {
+int apply_command(char** tokens, char** history,int* front, int* rear,struct Alias** head) {
 
     char *builtin_str[] = {
             "exit",
@@ -42,9 +44,16 @@ int apply_command(char** tokens, char** history,int* front, int* rear) {
     {
         if((*tokens)[0] == '!'){                        // check if history command
             tokens = check_history_type(tokens, history, front, rear);
+            return TRUE;
         }
 
+
         if(tokens!=NULL){
+
+            if(strcmp(tokens[0],"alias")==0)
+            {
+                return (tokens,head);
+            }
             for (int i = 0; i < COMMANDS_LENGTH; ++i) {
                 if (strcmp(tokens[0], builtin_str[i]) == 0) //checking if the input is an inbuilt function and if so calling it
                     return (*builtin_func[i])(tokens, history, front, rear);                         // with the arguments provided with it

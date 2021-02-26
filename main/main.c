@@ -11,10 +11,11 @@ int main()
     int status;
     char *start_path = getenv("PATH"); // initial path stored
     char* history[20];
-
+struct Alias**head;
     int front, rear;
     front = rear = -1;
 
+    head=NULL;
     welcome();
     set_directory();
     make_history(history);
@@ -29,7 +30,7 @@ int main()
 
         args = tokenise(line);
 
-        status = apply_command(args, history,&front, &rear);
+        status = apply_command(args, history,&front, &rear,head);
         free(line);
         free(args);
     } while (status);
