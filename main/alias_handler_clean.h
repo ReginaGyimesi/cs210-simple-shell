@@ -1,5 +1,5 @@
 //
-// Created by bilko26 on 2021. 02. 26..
+// Created by Balazs Szalay on 2021. 02. 26.
 //
 
 #ifndef CS210_SIMPLE_SHELL_ALIAS_HANDLER_CLEAN_H
@@ -23,7 +23,38 @@ AList new_list()
     return temp;
 }
 
+int size_of_tokens(char** tokens){
+    int size = 0;
+    int i;
+    for(i = 0; tokens[i] != NULL; ++i){
+        char* temp = tokens[i];
+        for(int j = 0; temp[j] != '\0'; ++j){
+            size++;
+        }
+    }
 
+    return size+i+1;
+}
+
+char* detokenize(char** tokens, char* value){
+    int i;
+    for(i = 0; tokens[i] != NULL; ++i){
+        char* temp = tokens[i];
+
+        if(value[0] == '\0'){
+            strcpy(value, temp);
+        }
+        else{
+            strcat(value, " ");
+            strcat(value, temp);
+        }
+
+    }
+
+    strcat(value, "\0");
+
+    return value;
+}
 
 Alias *new_alias(char* key,char*value){
     Alias *temp = (Alias*) malloc(sizeof(Alias));
@@ -35,7 +66,6 @@ Alias *new_alias(char* key,char*value){
     temp->next = NULL;
     return temp;
 }
-
 
 void add_alias(AList l,char*key,char*value)
 {
@@ -55,6 +85,7 @@ void add_alias(AList l,char*key,char*value)
     }
 
 }
+
 void print_alias(AList l)
 {
 
@@ -73,9 +104,7 @@ void print_alias(AList l)
 
 }
 
-
-
-int replace_if_exists(AList l, char* key, char* value)
+int replace_if_exists(AList l, char* key, char** tokens)
 {
 
     Alias *current=*l;
@@ -84,8 +113,14 @@ int replace_if_exists(AList l, char* key, char* value)
         if(strcmp(current->key,key)==0)
         {
             free(current->value);
-            current->value = malloc(sizeof (char) * strlen(value));
+            current->value = malloc(sizeof (char) * size_of_tokens(tokens));
+
+            char* value = malloc(sizeof(char)*size_of_tokens(tokens));
+            detokenize(tokens, value);
+
             strcpy(current->value, value);
+
+            free(value);
             return 1;
         }
         else
@@ -98,12 +133,15 @@ int replace_if_exists(AList l, char* key, char* value)
 
 }
 
-int add_replace(AList l,char*key,char*value)
+int add_replace(AList l,char*key, char** tokens)
 {
-    int status=replace_if_exists(l,key,value);
+    int status = replace_if_exists(l, key, tokens);
     if(status==-1)
     {
-        add_alias(l,key,value);
+        char* value = malloc(sizeof(char)*size_of_tokens(tokens));
+        detokenize(tokens, value);
+        add_alias(l, key, value);
+        free(value);
         return 1;
     }
     return status;
@@ -160,24 +198,46 @@ int delete_alias(AList l, char*key)
     return -1;
 }
 
+char** get_key_from_tokens(char** tokens, AList aliases, int* is_new){
 
-int check_alias(char** tokens, AList aliases) {
+    Alias* curr = *aliases;
 
-     if(strcmp(tokens[0],"alias")==0 && tokens[1]!=NULL && tokens[2]!=NULL && tokens[3]==NULL)
+    if(curr == NULL){
+        *is_new = FALSE;
+        return tokens;
+    }
+
+    while(curr!=NULL){
+        if(strcmp(curr->key, tokens[0]) == 0){
+            *is_new = TRUE;
+            return tokenise(curr->value);
+        }
+        curr = curr->next;
+    }
+
+    *is_new = FALSE;
+    return tokens;
+}
+
+char** check_alias(char** tokens, AList aliases) {
+
+     if(strcmp(tokens[0],"alias")==0 && tokens[1]!=NULL && tokens[2]!=NULL)
     {
-        add_replace(aliases,tokens[1],tokens[2]);
+        add_replace(aliases, tokens[1], &tokens[2]);
         printf("create an alias\n");
-        return 1;
-    }if(strcmp(tokens[0],"alias")==0&&tokens[1]==NULL)
+        return NULL;
+
+    }if(strcmp(tokens[0],"alias")==0 && tokens[1]==NULL)
     {
         print_alias(aliases);
-        return 1;
+        return NULL;
     }
 
-    else if (strcmp(tokens[0],"unalias")==0&&tokens[1]!=NULL&&tokens[2]==NULL)
+    else if (strcmp(tokens[0],"unalias")==0 && tokens[1]!=NULL && tokens[2]==NULL)
     {
-        return delete_alias(aliases,tokens[1]);
+        delete_alias(aliases,tokens[1]);
+        return NULL;
     }
     else
-        return -1;
+        return tokens;
 }

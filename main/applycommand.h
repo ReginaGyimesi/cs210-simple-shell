@@ -42,23 +42,39 @@ int apply_command(char** tokens, char** history,int* front, int* rear,AList alia
     }
     else
     {
-        if((*tokens)[0] == '!'){                        // check if history command
-            tokens = check_history_type(tokens, history, front, rear);
+        int one_of_history_or_alias = TRUE;
+        while(one_of_history_or_alias){
 
-        }   // we need else if, why? because the input "!clear" will return NULL, and it will cause errors
-        else if (strcmp(tokens[0],"alias")==0||strcmp(tokens[0],"unalias")==0)
-        {
-            return check_alias(tokens,aliases);
+            while(tokens != NULL && (*tokens)[0] == '!'){                        // check if history command
+                tokens = check_history_type(tokens, history, front, rear);
+            }   // we need else if, why? because the input "!clear" will return NULL, and it will cause errors
+
+            if(tokens == NULL){
+                return TRUE;
+            }
+
+            while(tokens != NULL && (strcmp(tokens[0],"alias") == 0 || strcmp(tokens[0],"unalias") == 0)){
+                tokens = check_alias(tokens,aliases);
+            }
+
+            if(tokens == NULL){
+                return TRUE;
+            }
+
+            tokens = get_key_from_tokens(tokens, aliases, &one_of_history_or_alias);
+
+            if(tokens == NULL){
+                one_of_history_or_alias = FALSE;
+            }
         }
 
-
         if(tokens!=NULL){
-
-
             for (int i = 0; i < COMMANDS_LENGTH; ++i) {
                 if (strcmp(tokens[0], builtin_str[i]) == 0) //checking if the input is an inbuilt function and if so calling it
                     return (*builtin_func[i])(tokens, history, front, rear);                         // with the arguments provided with it
             }
+
+            //check if input is in the aliases
 
             //else creating a Unix call and passing in the tokenized the arguments
             pid_t pid;
@@ -80,8 +96,6 @@ int apply_command(char** tokens, char** history,int* front, int* rear,AList alia
                 return TRUE;
             }
         }
-
-
 
     }
 

@@ -257,7 +257,7 @@ char** check_history_type(char** tokens, char** history, int* front, int* last){
 
     }
 
-    return NULL;
+    return tokens;
 
 
 }
