@@ -6,116 +6,140 @@
 #define CS210_SIMPLE_SHELL_ALIAS_HANDLER_CLEAN_H
 
 #endif //CS210_SIMPLE_SHELL_ALIAS_HANDLER_CLEAN_H
-struct Alias {
-    char *key;
-    char *command;
-    struct Alias *next;
-}; // Alias struct defined
-int alias_length_clean(struct Alias **head) {
-    int length = 0;
 
-    struct Alias *ptr = *head; // Pointer initialised
+struct alias{
+    char* key;
+    char* value;
+    struct alias *next;
+};
 
-    while(ptr != NULL) {
-        ptr = ptr->next;
-        length++;
-    } // Iterate and count through list using pointer
+typedef struct alias Alias;
+typedef struct alias** AList;
 
-    return length;
+
+
+
+
+
+
+Alias *new_alias(char* key,char*value){
+    Alias *temp = (Alias*) malloc(sizeof(Alias));
+    temp->key= key;
+    temp->value=value;
+    temp->next = NULL;
+    return temp;
 }
-struct Alias *search(struct Alias **head,char* key) {
-    struct Alias *ptr = *head; // Pointer initialised at head of list
-
-    if(ptr == NULL) {
-        return NULL;
-    } // Return NULL if list empty
-    else {
-        while(ptr->key != key) {
-            if(ptr->next == NULL) {
-                return NULL;
-            } // Key not found in list
-            else {
-                ptr = ptr->next;
-            } // Iterate through list using pointer
-        }
-
-        return ptr; // Return alias if key found, otherwise return NULL
-    }
 
 
-    int add_alias_clean(struct Alias **head,char *key,char* value)
+void add_alias(AList l,char*key,char*value)
+{
+    Alias* newN = new_alias(key,value);
+    Alias* current = *l;
+    if(current==NULL)
     {
-    struct Alias *ptr = search(head,key); // Pointer initialised at head of list
-        if(ptr==NULL)//we did not find the key in the linkedList
-        {
-            ptr = (struct Alias*)malloc(sizeof(struct Alias)); //creating a new Alias
-            ptr->key=key;
-            ptr->command=value;
-            ptr->next=*head;
-            head=&ptr;      //adding it to the beginning of the list
-            return TRUE;
-
-        }
-        else        //else updating the value of the key
-        {
-            ptr->command=value;
-            return TRUE;
-        }
-        //else something went wrong
-        return ERROR;
-
+        *l=newN;
+    }
+    else{
+        newN->next=current;
+        *l=newN;
     }
 
-    int remove_alias_clean(struct Alias **head, char* key) {
-        struct Alias *temp = *head; // Stores head
-        struct Alias *prev = NULL;
+}
+void print_alias(AList l)
+{
+    Alias *curr=*l;
+    while(curr!=NULL)
+    {
+        printf("%s, %s",curr->key,curr->value);
+        curr=curr->next;
+    }
 
-        if(key == NULL) {
-            fprintf(stderr, "Invalid key.\n"); // Error if key is empty
-            return ERROR;
-        }
-        if (temp != NULL && temp->command == key) // If head is to be removed
+}
+
+
+
+int replace_if_exists(AList l ,char* key,char* value)
+{
+
+    Alias *current=*l;
+    while(current!=NULL)
+    {
+        if(current->key==key)
         {
-            *head = temp->next; // Changes head
-            free(temp);        // Frees old head
-            return TRUE;
+            current->value=value;
+            return 1;
         }
         else
         {
-            while (temp != NULL && temp->command != key) // Searches for the command given by the key
+            current=current->next;
+        }
+
+    }
+    return -1;
+
+}
+
+int add_replace(AList l,char*key,char*value)
+{
+    int status=replace_if_exists(l,key,value);
+    if(status>-1)
+    {
+        add_alias(l,key,value);
+        return 1;
+    }
+    return status;
+}
+
+int delete_alias(AList l,char*key)
+{
+
+    Alias* curr=*l;
+    Alias* previous=NULL;
+    if(curr==NULL)
+    {
+        printf("No aliases have been set\n"); //no aliases have been set invalid operation
+        return -1;
+    }
+    else if(curr->key==key) //if first element is what we're looking for
+    {
+        if(curr->next!=NULL)//if its not the only element list head points to next element
+        {
+            l=&curr->next;
+        }
+        else{
+            l=NULL; //if it is then we set the list to NULL
+        }
+        free(curr);
+        return 1;
+    }
+    while(curr->next!=NULL) //iterate to the end of the list
+    {
+        previous=curr;
+        curr=curr->next;
+
+        if(curr->key=key)
+        {
+            if(curr->next!=NULL)
             {
-                prev = temp;
-                temp = temp->next;
+                previous->next=curr->next;
+                free(curr);
+                return 1;
             }
+            previous->next=NULL;
+            free(curr);
+            return 1;
 
-            if (temp == NULL ) {
-                fprintf(stderr, "Key not found.\n");
-                return ERROR;
-            }
-            prev->next = temp->next;  // Otherwise remove alias
-            free(temp);
-            return TRUE;
+
         }
+
+        curr=curr->next;
+
+
+
     }
-    int print_alias(struct Alias **head) {
-        struct Alias *ptr = *head;
-        if(ptr == NULL) // If head is NULL then there are no aliases set.
-            fprintf(stderr, "No aliases set.\n");
-
-        while (ptr != NULL) {
-            printf(" %s ", ptr->command);
-            ptr = ptr->next;
-        }
-    }
-    int check_alias(char** tokens,struct Alias** head) {
-
-        if (strcmp(tokens[0], "alias") == 0 && tokens[1] == NULL){
-            return print_alias(head);
-        }
-    }
-
-
-
+    printf("Alias with these parameters was not found\n");
+    return -1;
+}
 
 
 }
