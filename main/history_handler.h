@@ -46,7 +46,7 @@ int is_history_full(int* front, int *rear){
     return FALSE;
 }
 
-int add_to_history(char* input, char* history[],int* front, int *rear) {
+int add_to_history(char* input, char* history[], int* front, int *rear) {
 
     if(input == NULL || strcmp(input, "\n") == 0 || strcmp(input, "\0") == 0){
         fprintf(stderr, "Input error, not adding to history");
@@ -246,6 +246,8 @@ char** check_history_type(char** tokens, char** history, int* front, int* last){
         else if(strcmp(first_token, "!clear") == 0){
             free_history(history);
             make_history(history);
+            *front = -1;
+            *last = -1;
             printf("History has been reset!\n");
             return NULL;
         }

@@ -45,8 +45,8 @@ int apply_command(char** tokens, char** history,int* front, int* rear,AList alia
         if((*tokens)[0] == '!'){                        // check if history command
             tokens = check_history_type(tokens, history, front, rear);
 
-        }
-        if (strcmp(tokens[0],"alias")==0||strcmp(tokens[0],"unalias")==0)
+        }   // we need else if, why? because the input "!clear" will return NULL, and it will cause errors
+        else if (strcmp(tokens[0],"alias")==0||strcmp(tokens[0],"unalias")==0)
         {
             return check_alias(tokens,aliases);
         }

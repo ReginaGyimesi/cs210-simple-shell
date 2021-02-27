@@ -27,9 +27,11 @@ AList new_list()
 
 Alias *new_alias(char* key,char*value){
     Alias *temp = (Alias*) malloc(sizeof(Alias));
+    temp->key = malloc(sizeof (char) * strlen(key));
+    temp->value = malloc(sizeof (char) * strlen(value));
 
-    temp->key= key;
-    temp->value=value;
+    strcpy(temp->key, key);
+    strcpy(temp->value, value);
     temp->next = NULL;
     return temp;
 }
@@ -73,7 +75,7 @@ void print_alias(AList l)
 
 
 
-int replace_if_exists(AList l ,char* key,char* value)
+int replace_if_exists(AList l, char* key, char* value)
 {
 
     Alias *current=*l;
@@ -81,7 +83,9 @@ int replace_if_exists(AList l ,char* key,char* value)
     {
         if(strcmp(current->key,key)==0)
         {
-            current->value=value;
+            free(current->value);
+            current->value = malloc(sizeof (char) * strlen(value));
+            strcpy(current->value, value);
             return 1;
         }
         else
@@ -105,7 +109,7 @@ int add_replace(AList l,char*key,char*value)
     return status;
 }
 
-int delete_alias(AList l,char*key)
+int delete_alias(AList l, char*key)
 {
 
     Alias* curr=*l;
@@ -117,8 +121,10 @@ int delete_alias(AList l,char*key)
     }
     else if(strcmp(curr->key,key)==0) //if first element is what we're looking for
     {
-        l=&curr->next;
+        *l = curr->next;
 
+        free(curr->key);
+        free(curr->value);
         free(curr);
         return 1;
     }
@@ -127,22 +133,25 @@ int delete_alias(AList l,char*key)
         previous=curr;
         curr=curr->next;
 
-        if(curr->key=key)
+        if(strcmp(curr->key,key)==0)
         {
             if(curr->next!=NULL)
             {
                 previous->next=curr->next;
+                free(curr->key);
+                free(curr->value);
                 free(curr);
                 return 1;
             }
             previous->next=NULL;
+
+            free(curr->key);
+            free(curr->value);
             free(curr);
             return 1;
 
 
         }
-
-        curr=curr->next;
 
 
 
@@ -154,7 +163,7 @@ int delete_alias(AList l,char*key)
 
 int check_alias(char** tokens, AList aliases) {
 
-     if(strcmp(tokens[0],"alias")==0&&tokens[1]!=NULL&&tokens[2]!=NULL&&tokens[3]==NULL)
+     if(strcmp(tokens[0],"alias")==0 && tokens[1]!=NULL && tokens[2]!=NULL && tokens[3]==NULL)
     {
         add_replace(aliases,tokens[1],tokens[2]);
         printf("create an alias\n");

@@ -11,7 +11,7 @@ int main()
     int status;
     char *start_path = getenv("PATH"); // initial path stored
     char* history[20];
- AList aliases;
+    AList aliases;
     int front, rear;
     front = rear = -1;
 
@@ -31,8 +31,8 @@ int main()
         args = tokenise(line);
 
         status = apply_command(args, history,&front, &rear,aliases);
-        //free(line);
-        //free(args);
+        free(line);
+        free(args);
     } while (status);
 
     save_history(history, &front, &rear);
