@@ -11,7 +11,7 @@
 
 #endif //CS210_SIMPLE_SHELL_APPLYCOMMAND_H
 
-int apply_command(char** tokens, char** history,int* front, int* rear,struct Alias** head) {
+int apply_command(char** tokens, char** history,int* front, int* rear,AList aliases) {
 
     char *builtin_str[] = {
             "exit",
@@ -44,15 +44,19 @@ int apply_command(char** tokens, char** history,int* front, int* rear,struct Ali
     {
         if((*tokens)[0] == '!'){                        // check if history command
             tokens = check_history_type(tokens, history, front, rear);
-            return TRUE;
+
+        }
+        if (strcmp(tokens[0],"alias")==0)
+        {
+            return check_alias(tokens,aliases);
         }
 
 
         if(tokens!=NULL){
 
-            if(strcmp(tokens[0],"alias")==0)
+            if(strcmp(tokens[0],"alias")==0||strcmp(tokens[0],"unalias")==0)
             {
-                return (tokens,head);
+
             }
             for (int i = 0; i < COMMANDS_LENGTH; ++i) {
                 if (strcmp(tokens[0], builtin_str[i]) == 0) //checking if the input is an inbuilt function and if so calling it

@@ -16,6 +16,13 @@ struct alias{
 typedef struct alias Alias;
 typedef struct alias** AList;
 
+AList new_list()
+{
+    AList temp=malloc(sizeof(Alias*));
+    *temp=NULL;
+    return temp;
+}
+
 
 
 
@@ -47,7 +54,14 @@ void add_alias(AList l,char*key,char*value)
 }
 void print_alias(AList l)
 {
+
     Alias *curr=*l;
+    if(curr==NULL)
+    {
+        printf("No aliases have been set\n");
+        return;
+    }
+
     while(curr!=NULL)
     {
         printf("%s, %s",curr->key,curr->value);
@@ -82,7 +96,7 @@ int replace_if_exists(AList l ,char* key,char* value)
 int add_replace(AList l,char*key,char*value)
 {
     int status=replace_if_exists(l,key,value);
-    if(status>-1)
+    if(status==-1)
     {
         add_alias(l,key,value);
         return 1;
@@ -142,4 +156,16 @@ int delete_alias(AList l,char*key)
 }
 
 
+int check_alias(char** tokens, AList aliases) {
+
+    if(strcmp(tokens[0],"alias")==0&&tokens[1]==NULL)
+    {
+        print_alias(aliases);
+        return 1;
+    }
+    else if(strcmp(tokens[0],"alias")==0&&tokens[1]!=NULL&&tokens[2]!=NULL&&tokens[3]==NULL)
+    {
+        add_replace(aliases,tokens[1],tokens[2]);
+        printf("create an alias\n");
+    }
 }

@@ -11,11 +11,11 @@ int main()
     int status;
     char *start_path = getenv("PATH"); // initial path stored
     char* history[20];
-struct Alias**head;
+ AList aliases;
     int front, rear;
     front = rear = -1;
 
-    head=NULL;
+    aliases=new_list();
     welcome();
     set_directory();
     make_history(history);
@@ -30,7 +30,7 @@ struct Alias**head;
 
         args = tokenise(line);
 
-        status = apply_command(args, history,&front, &rear,head);
+        status = apply_command(args, history,&front, &rear,aliases);
         free(line);
         free(args);
     } while (status);
