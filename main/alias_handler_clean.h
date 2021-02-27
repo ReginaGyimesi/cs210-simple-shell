@@ -25,12 +25,9 @@ AList new_list()
 
 
 
-
-
-
-
 Alias *new_alias(char* key,char*value){
     Alias *temp = (Alias*) malloc(sizeof(Alias));
+
     temp->key= key;
     temp->value=value;
     temp->next = NULL;
@@ -40,7 +37,11 @@ Alias *new_alias(char* key,char*value){
 
 void add_alias(AList l,char*key,char*value)
 {
+  //  char key1=*key;
+    //char value1=*value;
+
     Alias* newN = new_alias(key,value);
+
     Alias* current = *l;
     if(current==NULL)
     {
@@ -56,7 +57,7 @@ void print_alias(AList l)
 {
 
     Alias *curr=*l;
-    if(curr==NULL)
+    if(curr==NULL||*l==NULL)
     {
         printf("No aliases have been set\n");
         return;
@@ -64,7 +65,7 @@ void print_alias(AList l)
 
     while(curr!=NULL)
     {
-        printf("%s, %s",curr->key,curr->value);
+        printf("%s %s \n",curr->key,curr->value);
         curr=curr->next;
     }
 
@@ -78,7 +79,7 @@ int replace_if_exists(AList l ,char* key,char* value)
     Alias *current=*l;
     while(current!=NULL)
     {
-        if(current->key==key)
+        if(strcmp(current->key,key)==0)
         {
             current->value=value;
             return 1;
@@ -114,15 +115,10 @@ int delete_alias(AList l,char*key)
         printf("No aliases have been set\n"); //no aliases have been set invalid operation
         return -1;
     }
-    else if(curr->key==key) //if first element is what we're looking for
+    else if(strcmp(curr->key,key)==0) //if first element is what we're looking for
     {
-        if(curr->next!=NULL)//if its not the only element list head points to next element
-        {
-            l=&curr->next;
-        }
-        else{
-            l=NULL; //if it is then we set the list to NULL
-        }
+        l=&curr->next;
+
         free(curr);
         return 1;
     }
@@ -158,14 +154,21 @@ int delete_alias(AList l,char*key)
 
 int check_alias(char** tokens, AList aliases) {
 
-    if(strcmp(tokens[0],"alias")==0&&tokens[1]==NULL)
+     if(strcmp(tokens[0],"alias")==0&&tokens[1]!=NULL&&tokens[2]!=NULL&&tokens[3]==NULL)
+    {
+        add_replace(aliases,tokens[1],tokens[2]);
+        printf("create an alias\n");
+        return 1;
+    }if(strcmp(tokens[0],"alias")==0&&tokens[1]==NULL)
     {
         print_alias(aliases);
         return 1;
     }
-    else if(strcmp(tokens[0],"alias")==0&&tokens[1]!=NULL&&tokens[2]!=NULL&&tokens[3]==NULL)
+
+    else if (strcmp(tokens[0],"unalias")==0&&tokens[1]!=NULL&&tokens[2]==NULL)
     {
-        add_replace(aliases,tokens[1],tokens[2]);
-        printf("create an alias\n");
+        return delete_alias(aliases,tokens[1]);
     }
+    else
+        return -1;
 }

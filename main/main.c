@@ -31,8 +31,8 @@ int main()
         args = tokenise(line);
 
         status = apply_command(args, history,&front, &rear,aliases);
-        free(line);
-        free(args);
+        //free(line);
+        //free(args);
     } while (status);
 
     save_history(history, &front, &rear);

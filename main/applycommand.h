@@ -46,7 +46,7 @@ int apply_command(char** tokens, char** history,int* front, int* rear,AList alia
             tokens = check_history_type(tokens, history, front, rear);
 
         }
-        if (strcmp(tokens[0],"alias")==0)
+        if (strcmp(tokens[0],"alias")==0||strcmp(tokens[0],"unalias")==0)
         {
             return check_alias(tokens,aliases);
         }
@@ -54,10 +54,7 @@ int apply_command(char** tokens, char** history,int* front, int* rear,AList alia
 
         if(tokens!=NULL){
 
-            if(strcmp(tokens[0],"alias")==0||strcmp(tokens[0],"unalias")==0)
-            {
 
-            }
             for (int i = 0; i < COMMANDS_LENGTH; ++i) {
                 if (strcmp(tokens[0], builtin_str[i]) == 0) //checking if the input is an inbuilt function and if so calling it
                     return (*builtin_func[i])(tokens, history, front, rear);                         // with the arguments provided with it
