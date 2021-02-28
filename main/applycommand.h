@@ -43,18 +43,21 @@ int apply_command(char** tokens, char** history,int* front, int* rear,AList alia
     else
     {
         int one_of_history_or_alias = TRUE;
-        while(one_of_history_or_alias){
+        int limit = 0;
+        while(one_of_history_or_alias && limit < 20){
 
-            while(tokens != NULL && (*tokens)[0] == '!'){                        // check if history command
+            while(tokens != NULL && limit < 20 && (*tokens)[0] == '!'){                        // check if history command
                 tokens = check_history_type(tokens, history, front, rear);
+
             }   // we need else if, why? because the input "!clear" will return NULL, and it will cause errors
 
             if(tokens == NULL){
                 return TRUE;
             }
 
-            while(tokens != NULL && (strcmp(tokens[0],"alias") == 0 || strcmp(tokens[0],"unalias") == 0)){
+            while(tokens != NULL && limit < 20 && (strcmp(tokens[0],"alias") == 0 || strcmp(tokens[0],"unalias") == 0)){
                 tokens = check_alias(tokens,aliases);
+
             }
 
             if(tokens == NULL){
@@ -66,6 +69,8 @@ int apply_command(char** tokens, char** history,int* front, int* rear,AList alia
             if(tokens == NULL){
                 one_of_history_or_alias = FALSE;
             }
+
+            limit++;
         }
 
         if(tokens!=NULL){

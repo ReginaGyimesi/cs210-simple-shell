@@ -72,6 +72,8 @@ void add_alias(AList l,char*key,char*value)
   //  char key1=*key;
     //char value1=*value;
 
+
+
     Alias* newN = new_alias(key,value);
 
     Alias* current = *l;
@@ -121,6 +123,9 @@ int replace_if_exists(AList l, char* key, char** tokens)
             strcpy(current->value, value);
 
             free(value);
+
+            printf("Alias was replaced!\n");
+
             return 1;
         }
         else
@@ -210,7 +215,12 @@ char** get_key_from_tokens(char** tokens, AList aliases, int* is_new){
     while(curr!=NULL){
         if(strcmp(curr->key, tokens[0]) == 0){
             *is_new = TRUE;
-            return tokenise(curr->value);
+
+            int size = sizeof(curr->value)+1;
+            char* temp = calloc(size, sizeof(char));
+            strcpy(temp, curr->value);
+
+            return tokenise(temp);
         }
         curr = curr->next;
     }
@@ -239,5 +249,5 @@ char** check_alias(char** tokens, AList aliases) {
         return NULL;
     }
     else
-        return tokens;
+        return NULL;
 }
