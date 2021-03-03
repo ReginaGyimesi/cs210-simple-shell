@@ -261,7 +261,10 @@ char** check_alias(char** tokens, AList aliases) {
  */
 int save_aliases(AList aliases) {
     Alias* current = *aliases;
-    FILE *file = fopen("/.aliases", "w+");
+    char *filepath = malloc(sizeof(char) * MAX_INPUT_LENGTH);
+    strcpy(filepath, getenv("HOME"));
+    strcat(filepath, "/.aliases");
+    FILE *file = fopen(filepath, "w+");
 
     if(current==NULL)
     {
@@ -275,5 +278,42 @@ int save_aliases(AList aliases) {
     }
 
     fclose(file);
+    free(filepath);
     return 1;
+}
+
+
+/*
+ * Opens .aliases file, reads in every line and adds to alias list.
+ */
+int load_aliases(AList aliases) {
+	char *filepath = malloc(sizeof(char) * MAX_INPUT_LENGTH);
+    strcpy(filepath, getenv("HOME"));
+    strcat(filepath, "/.aliases");
+    FILE *file = fopen(filepath, "r+");
+    
+    char line[MAX_INPUT_LENGTH];
+    char temp[MAX_INPUT_LENGTH];
+    char *key;
+    char *value;
+
+    if(!file) {
+        fprintf(stderr, "Aliases file could not be located\n");
+        return ERROR;
+    } // Returns error if .aliases file not located
+    else {
+        while(fgets(line, sizeof(line), file)) {
+            
+            strcpy(temp, line);
+
+            key = strtok(temp, " ");
+            value = line + strlen(key) + 1;
+
+            add_alias(aliases, key, value);
+        }
+    } // Otherewise adds alias grabbed from each line
+
+    fclose(file);
+    free(filepath);
+    return TRUE;
 }
