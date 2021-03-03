@@ -35,6 +35,7 @@ int main()
         free(args);
     } while (status);
 
+    save_aliases(aliases);
     save_history(history, &front, &rear);
     free_history(history); // later on, the history will be saved in a separate file
     setenv("PATH", start_path, 1); // initial path restored

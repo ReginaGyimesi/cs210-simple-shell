@@ -1,5 +1,7 @@
 //
-// Created by Balazs Szalay on 2021. 02. 26.
+// Contains methods for handling the aliases,
+// including methods to add, print and remove aliases.
+// Created by Balazs Szalay, Eamonn McClay and Regina Gyimesi on 2021. 02. 26.
 //
 
 #ifndef CS210_SIMPLE_SHELL_ALIAS_HANDLER_CLEAN_H
@@ -250,4 +252,28 @@ char** check_alias(char** tokens, AList aliases) {
     }
     else
         return NULL;
+}
+
+
+/*
+ * Creates or opens .aliases file, saves every line of alias with the corresponding key and closes
+ * when there is no more to write.
+ */
+int save_aliases(AList aliases) {
+    Alias* current = *aliases;
+    FILE *file = fopen("/.aliases", "w+");
+
+    if(current==NULL)
+    {
+        printf("No aliases have been set\n"); // no aliases have been set invalid operation
+        return -1;
+    }
+
+    while(current!=NULL){
+        fprintf(file, "%s %s\n", current->key, current->value); // writes key and the corresponding alias to file
+        current = current->next;
+    }
+
+    fclose(file);
+    return 1;
 }
