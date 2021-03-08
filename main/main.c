@@ -20,6 +20,7 @@ int main()
     set_directory();
     make_history(history);
     load_history(history, &front, &rear);
+    load_aliases(aliases);
 
     do {
 
@@ -33,6 +34,7 @@ int main()
         status = apply_command(args, history,&front, &rear,aliases);
         free(line);
         free(args);
+        args = NULL;
     } while (status);
 
     save_aliases(aliases);

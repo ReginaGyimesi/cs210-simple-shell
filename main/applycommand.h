@@ -11,7 +11,7 @@
 
 #endif //CS210_SIMPLE_SHELL_APPLYCOMMAND_H
 
-int apply_command(char** tokens, char** history,int* front, int* rear,AList aliases) {
+int apply_command(char** tokens, char** history,int* front, int* rear, AList aliases) {
 
     char *builtin_str[] = {
             "exit",
@@ -42,9 +42,10 @@ int apply_command(char** tokens, char** history,int* front, int* rear,AList alia
     }
     else
     {
-        // This is where or main command repetition happening
-        int one_of_history_or_alias = TRUE;     // If this is false, that means the latest command wasnt a history or a alias command
-        int limit = 0;                          // Our maximum recurring limit
+        // This is where or main command repetition happening*tokens = NULL;
+        //                tokens = NULL;
+        int one_of_history_or_alias = TRUE;                 // If this is false, that means the latest command wasnt a history or a alias command
+        int limit = 0;                                      // Our maximum recurring limit
         while(one_of_history_or_alias && limit < 20){       // This is a O(n^2) function, where n is the length of the command
 
             /*
@@ -145,23 +146,31 @@ int apply_command(char** tokens, char** history,int* front, int* rear,AList alia
             if(pid<0)
             {
                 printf("Fork failed");
+                *tokens = NULL;
+                tokens = NULL;
                 return TRUE;
             }
             else if(pid==0)
             {
                 execvp(tokens[0],tokens);
                 perror("Error: ");
+                *tokens = NULL;
+                tokens = NULL;
                 exit(EXIT_FAILURE);
             }
             else{
                 wait(NULL);
                 printf("Child complete\n");
+                *tokens = NULL;
+                tokens = NULL;
                 return TRUE;
             }
         }
 
     }
 
+    *tokens = NULL;
+    tokens = NULL;
     return TRUE;
 
 }

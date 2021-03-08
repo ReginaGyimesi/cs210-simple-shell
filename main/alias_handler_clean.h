@@ -71,10 +71,6 @@ Alias *new_alias(char* key,char*value){
 
 void add_alias(AList l,char*key,char*value)
 {
-  //  char key1=*key;
-    //char value1=*value;
-
-
 
     Alias* newN = new_alias(key,value);
 
@@ -102,7 +98,7 @@ void print_alias(AList l)
 
     while(curr!=NULL)
     {
-        printf("%s %s \n",curr->key,curr->value);
+        printf("%s %s\n",curr->key,curr->value);
         curr=curr->next;
     }
 
@@ -146,6 +142,7 @@ int add_replace(AList l,char*key, char** tokens)
     if(status==-1)
     {
         char* value = malloc(sizeof(char)*size_of_tokens(tokens));
+        memset(value, '\0', size_of_tokens(tokens));
         detokenize(tokens, value);
         add_alias(l, key, value);
         free(value);
@@ -170,6 +167,7 @@ int delete_alias(AList l, char*key)
 
         free(curr->key);
         free(curr->value);
+        curr->value = NULL;
         free(curr);
         return 1;
     }
@@ -183,24 +181,25 @@ int delete_alias(AList l, char*key)
             if(curr->next!=NULL)
             {
                 previous->next=curr->next;
+
                 free(curr->key);
                 free(curr->value);
                 free(curr);
                 return 1;
             }
-            previous->next=NULL;
+            else{
+                previous->next=NULL;
 
-            free(curr->key);
-            free(curr->value);
-            free(curr);
-            return 1;
-
+                free(curr->key);
+                free(curr->value);
+                free(curr);
+                return 1;
+            }
 
         }
 
-
-
     }
+
     printf("Alias with these parameters was not found\n");
     return -1;
 }
@@ -232,6 +231,16 @@ char** get_key_from_tokens(char** tokens, AList aliases, int* is_new){
 }
 
 char** check_alias(char** tokens, AList aliases) {
+
+//    if(tokens == NULL || *tokens == NULL){
+//        fprintf(stderr, "Invalid tokens or no aliases");
+//        return NULL;
+//    }
+
+//    if(tokens[2] != NULL && strcmp(tokens[2],"")==0 && strcmp(tokens[2],"alias")==0){
+//        fprintf(stderr, "Invalid tokens or no aliases");
+//        return NULL;
+//    }
 
      if(strcmp(tokens[0],"alias")==0 && tokens[1]!=NULL && tokens[2]!=NULL)
     {
@@ -288,6 +297,7 @@ int save_aliases(AList aliases) {
  */
 int load_aliases(AList aliases) {
 	char *filepath = malloc(sizeof(char) * MAX_INPUT_LENGTH);
+	memset(filepath, '\0', MAX_INPUT_LENGTH);
     strcpy(filepath, getenv("HOME"));
     strcat(filepath, "/.aliases");
     FILE *file = fopen(filepath, "r+");
@@ -297,17 +307,21 @@ int load_aliases(AList aliases) {
     char *key;
     char *value;
 
+    memset(temp, '\0', MAX_INPUT_LENGTH);
+
     if(!file) {
         fprintf(stderr, "Aliases file could not be located\n");
         return ERROR;
     } // Returns error if .aliases file not located
     else {
         while(fgets(line, sizeof(line), file)) {
-            
-            strcpy(temp, line);
+
+            for(int i = 0; i < strcspn(line, "\n"); ++i){
+                temp[i] = line[i];
+            }
 
             key = strtok(temp, " ");
-            value = line + strlen(key) + 1;
+            value = temp + strlen(key) + 1;
 
             add_alias(aliases, key, value);
         }
