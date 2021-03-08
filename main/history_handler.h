@@ -9,6 +9,13 @@
 
 #endif //CS210_SIMPLE_SHELL_HISTORY_HANDLER_H
 
+int number_of_elements_in_history(char** history){
+    int i;
+    for(i = 0; strcmp(history[i], "") != 0; ++i){}
+
+    return i;
+}
+
 void make_history(char** dest) {
 
     for (int k = 0; k < HISTORY_SIZE; k++) {
@@ -49,7 +56,7 @@ int is_history_full(int* front, int *rear){
 int add_to_history(char* input, char* history[], int* front, int *rear) {
 
     if(input == NULL || strcmp(input, "\n") == 0 || strcmp(input, "\0") == 0){
-        fprintf(stderr, "Input error, not adding to history");
+        fprintf(stderr, "Input error, not adding to history\n");
         return ERROR;
     }
 
@@ -103,14 +110,19 @@ char** exec_number_history(int number, char* history[], int *front) {
         }
 
         if(*history[i] != '\0'){                            // Copying and tokenizing the history command
-            char* line = malloc(sizeof(char) * MAX_INPUT_LENGTH);
+            char line[MAX_INPUT_LENGTH];
+            memset(line, '\0', MAX_INPUT_LENGTH);
             strcpy(line, history[i]);
             char** tokens = tokenise(line);
+
             return tokens;
         }
     }
 
     fprintf(stderr, "History cannot be executed\n");
+    if(number >= number_of_elements_in_history(history)){
+        fprintf(stderr, "Number is greater, than the number of history elements.\n");
+    }
     return NULL;
 }
 
@@ -135,14 +147,20 @@ char** exec_minus_number_history(int number, char* history[], int *last) {
         }
 
         if(*history[i] != '\0'){                            // Copying and tokenizing the history command
-            char* line = malloc(sizeof(char) * MAX_INPUT_LENGTH);
+            char line[MAX_INPUT_LENGTH];
+            memset(line, '\0', MAX_INPUT_LENGTH);
+
             strcpy(line, history[i]);
+
             char** tokens = tokenise(line);
             return tokens;
         }
     }
 
     fprintf(stderr, "History cannot be executed\n");
+    if(number >= number_of_elements_in_history(history)){
+        fprintf(stderr, "Number is greater, than the number of history elements.\n");
+    }
     return NULL;
 }
 
@@ -233,14 +251,23 @@ char** check_history_type(char** tokens, char** history, int* front, int* last){
 
     if(first_token[0] == '!'){                                  // checking string chars one-by-one
         if(first_token[1] == '!' && first_token[2] == '\0'){
+
+            free(tokens);
+
             return exec_recent_history(history,last);
         }
         else if(first_token[1] == '-'){
             int number = convert_number_to_int(tokens[0]);
+
+            free(tokens);
+
             return exec_minus_number_history(number, history, last);
         }
         else if(first_token[1] >= '0' && first_token[1] <= '9'){
             int number = convert_number_to_int(tokens[0]);
+
+            free(tokens);
+
             return  exec_number_history(number, history, front);
         }
         else if(strcmp(first_token, "!clear") == 0){
@@ -249,10 +276,14 @@ char** check_history_type(char** tokens, char** history, int* front, int* last){
             *front = -1;
             *last = -1;
             printf("History has been reset!\n");
+
+            free(tokens);
+
             return NULL;
         }
         else{
             fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
+            return NULL;
         }
 
     }

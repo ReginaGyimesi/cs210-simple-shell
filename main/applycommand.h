@@ -34,10 +34,13 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
     }
 
     if(*tokens == NULL){ //this happens if the user only pressed Enter, and nothing else as input
+        free(tokens);
         return ERROR;
     }
 
     if(*tokens[0] == '\0'){ //if the first input is null or a NULL char, then we return 0 thus indicating it is an exit
+        free(*tokens);
+        free(tokens);
         return FALSE;
     }
     else
@@ -138,39 +141,39 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
                     return (*builtin_func[i])(tokens, history, front, rear);                         // with the arguments provided with it
             }
 
-            //check if input is in the aliases
-
             //else creating a Unix call and passing in the tokenized the arguments
+
             pid_t pid;
             pid=fork();
+
             if(pid<0)
             {
                 printf("Fork failed");
-                *tokens = NULL;
-                tokens = NULL;
+
+                free(tokens);
+
                 return TRUE;
             }
             else if(pid==0)
             {
                 execvp(tokens[0],tokens);
-                perror("Error: ");
-                *tokens = NULL;
-                tokens = NULL;
+
+                free(tokens);
+
                 exit(EXIT_FAILURE);
             }
             else{
                 wait(NULL);
-                printf("Child complete\n");
-                *tokens = NULL;
-                tokens = NULL;
+                printf("Child complete\n"); // TODO: Remove this from output
+                free(tokens);
                 return TRUE;
             }
         }
 
     }
 
-    *tokens = NULL;
-    tokens = NULL;
+    free(tokens);
+
     return TRUE;
 
 }

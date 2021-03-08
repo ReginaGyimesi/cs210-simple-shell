@@ -32,16 +32,15 @@ int main()
         args = tokenise(line);
 
         status = apply_command(args, history,&front, &rear,aliases);
-        free(line);
-        free(args);
         args = NULL;
     } while (status);
 
     save_aliases(aliases);
     save_history(history, &front, &rear);
     free_history(history); // later on, the history will be saved in a separate file
+    free_aliases(aliases);
     setenv("PATH", start_path, 1); // initial path restored
     printf("Path is restored to %s\n",getenv("PATH"));
-    
+
     return 0;
 }
