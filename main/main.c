@@ -11,14 +11,16 @@ int main()
     int status;
     char *start_path = getenv("PATH"); // initial path stored
     char* history[20];
-
+    AList aliases;
     int front, rear;
     front = rear = -1;
 
+    aliases=new_list();
     welcome();
     set_directory();
     make_history(history);
     load_history(history, &front, &rear);
+    load_aliases(aliases);
 
     do {
 
@@ -29,15 +31,16 @@ int main()
 
         args = tokenise(line);
 
-        status = apply_command(args, history,&front, &rear);
-        free(line);
-        free(args);
+        status = apply_command(args, history,&front, &rear,aliases);
+        args = NULL;
     } while (status);
 
+    save_aliases(aliases);
     save_history(history, &front, &rear);
     free_history(history); // later on, the history will be saved in a separate file
+    free_aliases(aliases);
     setenv("PATH", start_path, 1); // initial path restored
     printf("Path is restored to %s\n",getenv("PATH"));
-    
+
     return 0;
 }

@@ -31,7 +31,8 @@ char** tokenise(char* input) {
         current ++;
     }
 
-    char** tokens = malloc(sizeof(char*) * n_token);
+    char** tokens = NULL;
+    tokens = malloc(sizeof(char*) * (n_token+1));
 
     current = input;
     n_token = 0;
