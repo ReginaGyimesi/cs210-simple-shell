@@ -121,7 +121,7 @@ int replace_if_exists(AList l, char* key, char** tokens)
 
             strcpy(current->value, value);
 
-            printf("Alias was replaced!\n");
+            printf("Alias was replaced\n");
 
             return 1;
         }
@@ -362,7 +362,6 @@ int free_aliases(AList aliases){
 
     if(current==NULL)
     {
-        printf("No aliases to free\n"); // TODO: Remove output
         return -1;
     }
 

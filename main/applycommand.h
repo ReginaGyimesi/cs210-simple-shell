@@ -135,11 +135,14 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
              */
         }
 
+
         if(tokens!=NULL){
             for (int i = 0; i < COMMANDS_LENGTH; ++i) {
                 if (strcmp(tokens[0], builtin_str[i]) == 0) //checking if the input is an inbuilt function and if so calling it
                     return (*builtin_func[i])(tokens, history, front, rear);                         // with the arguments provided with it
             }
+
+
 
             //else creating a Unix call and passing in the tokenized the arguments
 
@@ -157,6 +160,7 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
             else if(pid==0)
             {
                 execvp(tokens[0],tokens);
+                fprintf(stderr, "%s is not a valid command\n", tokens[0]);
 
                 free(tokens);
 
@@ -164,7 +168,6 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
             }
             else{
                 wait(NULL);
-                printf("Child complete\n"); // TODO: Remove this from output
                 free(tokens);
                 return TRUE;
             }

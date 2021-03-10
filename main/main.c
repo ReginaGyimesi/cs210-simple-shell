@@ -16,7 +16,6 @@ int main()
     front = rear = -1;
 
     aliases=new_list();
-    welcome();
     set_directory();
     make_history(history);
     load_history(history, &front, &rear);
