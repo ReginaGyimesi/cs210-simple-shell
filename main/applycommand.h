@@ -160,7 +160,8 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
             else if(pid==0)
             {
                 execvp(tokens[0],tokens);
-                fprintf(stderr, "%s is not a valid command\n", tokens[0]);
+                fprintf(stderr, "%s", tokens[0]);
+                perror(" is not a valid command");
 
                 free(tokens);
 
