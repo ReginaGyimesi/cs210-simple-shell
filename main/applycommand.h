@@ -45,6 +45,7 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
     }
     else
     {
+        tokens=substituteAlias(tokens,aliases);
         // This is where or main command repetition happening*tokens = NULL;
         //                tokens = NULL;
         int one_of_history_or_alias = TRUE;                 // If this is false, that means the latest command wasnt a history or a alias command

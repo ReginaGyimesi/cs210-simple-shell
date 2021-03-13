@@ -377,3 +377,53 @@ int free_aliases(AList aliases){
 
     return 1;
 }
+
+
+char* getvalue(char*key,AList aliases)
+{
+    Alias* current = *aliases;
+    if (current==NULL)
+    {
+        return NULL;
+    }
+    else
+    {
+        while (current!=NULL)
+        {
+            if (strcmp(key,current->key)==0)
+            {
+                return current->value;
+            }
+            current=current->next;
+        }
+        return NULL;
+    }
+
+
+}
+char** substituteAlias(char** tokens,AList aliases)
+{
+
+
+    char temp[MAX_INPUT_LENGTH];
+    memset(temp, '\0', MAX_INPUT_LENGTH);
+    int index=0;
+    while (tokens[index]!=NULL)
+    {
+        if (strcmp(tokens[0],"unalias")==0||strcmp(tokens[0],"alias")==0)
+        {
+            return tokens;
+        }
+        if (getvalue(tokens[index],aliases)!=NULL) {
+            strcat(temp, getvalue(tokens[index], aliases));
+            strcat(temp, " ");
+
+        }
+        else{
+            strcat(temp,tokens[index]);
+        }
+
+        index++;
+    }
+    return tokenise(temp);
+}
