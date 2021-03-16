@@ -46,12 +46,16 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
     else
     {
 
-        for(int i = 0; i < 20; ++i){
+        for(int i = 0; i < 20 && tokens != NULL; ++i){
             tokens=substituteAlias(tokens,aliases);
         }
 
         if(tokens != NULL && (*tokens)[0] == '!'){
             tokens = check_history_type(tokens, history, front, rear);
+        }
+
+        for(int i = 0; i < 20 && tokens != NULL; ++i){
+            tokens=substituteAlias(tokens,aliases);
         }
 
         if(tokens != NULL && (strcmp(tokens[0],"alias") == 0 || strcmp(tokens[0],"unalias") == 0)){
