@@ -45,6 +45,7 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
     }
     else
     {
+        tokens=substituteAlias(tokens,aliases);
         // This is where or main command repetition happening*tokens = NULL;
         //                tokens = NULL;
         int one_of_history_or_alias = TRUE;                 // If this is false, that means the latest command wasnt a history or a alias command
@@ -135,11 +136,14 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
              */
         }
 
+
         if(tokens!=NULL){
             for (int i = 0; i < COMMANDS_LENGTH; ++i) {
                 if (strcmp(tokens[0], builtin_str[i]) == 0) //checking if the input is an inbuilt function and if so calling it
                     return (*builtin_func[i])(tokens, history, front, rear);                         // with the arguments provided with it
             }
+
+
 
             //else creating a Unix call and passing in the tokenized the arguments
 
@@ -157,6 +161,8 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
             else if(pid==0)
             {
                 execvp(tokens[0],tokens);
+                fprintf(stderr, "%s", tokens[0]);
+                perror(" is not a valid command");
 
                 free(tokens);
 
@@ -164,7 +170,6 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
             }
             else{
                 wait(NULL);
-                printf("Child complete\n"); // TODO: Remove this from output
                 free(tokens);
                 return TRUE;
             }

@@ -9,14 +9,6 @@
 #endif //CS210_SIMPLE_SHELL_PROMPT_H
 
 
-
-// TODO: Remove welcome message
-// Displays a welcome message.
-int welcome() {
-    printf("CS210 Group 5 Simple Shell %s\n", VERSION);
-    return 0;
-}
-
 // Prints the prompt for the user to enter a command.
 int print_prompt() {
     printf("> ");
@@ -35,8 +27,6 @@ char* read_input() {
 
     if(strlen(input)==1)		//empty input
     {
-        // TODO: Remove this from output
-        printf("Enter a valid command\n");
         fflush(stdin);
         return input;			//does not actually return anything just calls itself until there is either a valid input or CTRL-d
     }

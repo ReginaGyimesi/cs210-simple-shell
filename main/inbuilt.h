@@ -100,7 +100,7 @@ int getpath(char** tokens, char** history, int* front, int* rear)
         return TRUE;
     }
     else{
-        printf("Invalid arguments after getpath\n");
+        fprintf(stderr, "Invalid number of parameters for getpath\n");
 
         free(tokens);
 
@@ -114,7 +114,7 @@ int setpath(char** tokens, char** history, int* front, int* rear)
 
     if(tokens[1]==NULL||tokens[2]!=NULL)
     {
-        printf("Invalid number of parameters for setpath\n");
+        fprintf(stderr, "Invalid number of parameters for setpath\n");
 
         free(tokens);
 
