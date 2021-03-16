@@ -303,12 +303,6 @@ int save_aliases(AList aliases) {
     strcat(filepath, "/.aliases");
     FILE *file = fopen(filepath, "w+");
 
-    if(current==NULL)
-    {
-        printf("No aliases have been set\n"); // no aliases have been set invalid operation
-        return -1;
-    }
-
     while(current!=NULL){
         fprintf(file, "%s %s\n", current->key, current->value); // writes key and the corresponding alias to file
         current = current->next;
