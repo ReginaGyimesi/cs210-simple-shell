@@ -60,8 +60,11 @@ char* detokenize(char** tokens, char* value){
 
 Alias *new_alias(char* key,char*value){
     Alias *temp = (Alias*) malloc(sizeof(Alias));
-    temp->key = malloc(sizeof (char) * (strlen(key)+1));
-    temp->value = malloc(sizeof (char) * (strlen(value)+1));
+    temp->key = malloc(sizeof (char) * MAX_INPUT_LENGTH);
+    temp->value = malloc(sizeof (char) * MAX_INPUT_LENGTH);
+
+    memset(temp->key, '\0', MAX_INPUT_LENGTH);
+    memset(temp->value, '\0', MAX_INPUT_LENGTH);
 
     strcpy(temp->key, key);
     strcpy(temp->value, value);
@@ -249,7 +252,12 @@ char** check_alias(char** tokens, AList aliases) {
 
      if(strcmp(tokens[0],"alias")==0 && tokens[1]!=NULL && tokens[2]!=NULL)
     {
-        add_replace(aliases, tokens[1], &tokens[2]);
+         char key_temp[MAX_INPUT_LENGTH];
+         memset(key_temp, '\0', MAX_INPUT_LENGTH);
+
+         strcpy(key_temp, tokens[1]);
+
+        add_replace(aliases, key_temp, &tokens[2]);
         printf("create an alias\n");    // TODO: Remove output
 
         free(tokens);
