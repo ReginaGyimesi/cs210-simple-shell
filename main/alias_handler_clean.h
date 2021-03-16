@@ -404,7 +404,6 @@ char* getvalue(char*key,AList aliases)
 char** substituteAlias(char** tokens,AList aliases)
 {
 
-
     char temp[MAX_INPUT_LENGTH];
     memset(temp, '\0', MAX_INPUT_LENGTH);
     int index=0;
@@ -416,8 +415,6 @@ char** substituteAlias(char** tokens,AList aliases)
         }
         if (getvalue(tokens[index],aliases)!=NULL) {
             strcat(temp, getvalue(tokens[index], aliases));
-
-
         }
         else{
             strcat(temp,tokens[index]);
@@ -426,5 +423,10 @@ char** substituteAlias(char** tokens,AList aliases)
 
         index++;
     }
-    return tokenise(temp);
+
+    char final[MAX_INPUT_LENGTH];
+    memset(final, '\0', MAX_INPUT_LENGTH);
+    strcpy(final, temp);
+
+    return tokenise(final);
 }
