@@ -416,12 +416,13 @@ char** substituteAlias(char** tokens,AList aliases)
         }
         if (getvalue(tokens[index],aliases)!=NULL) {
             strcat(temp, getvalue(tokens[index], aliases));
-            strcat(temp, " ");
+
 
         }
         else{
             strcat(temp,tokens[index]);
         }
+        strcat(temp, " ");
 
         index++;
     }
