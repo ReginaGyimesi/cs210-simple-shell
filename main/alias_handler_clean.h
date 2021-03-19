@@ -40,7 +40,7 @@ int size_of_tokens(char** tokens){
 
 char* detokenize(char** tokens, char* value){
     int i;
-    for(i = 0; tokens[i] != NULL; ++i){
+    for(i = 0; tokens[i] != NULL && strcmp(tokens[i], "") != 0; ++i){
         char* temp = tokens[i];
 
         if(value[0] == '\0'){
@@ -127,6 +127,7 @@ int replace_if_exists(AList l, char* key, char** tokens)
             printf("Alias was replaced\n");
 
             return 1;
+
         }
         else
         {
@@ -150,6 +151,7 @@ int add_replace(AList l,char*key, char** tokens)
         return 1;
     }
     return status;
+
 }
 
 int delete_alias(AList l, char*key)
@@ -252,10 +254,10 @@ char** check_alias(char** tokens, AList aliases) {
 
      if(strcmp(tokens[0],"alias")==0 && tokens[1]!=NULL && tokens[2]!=NULL)
     {
-         char key_temp[MAX_INPUT_LENGTH];
-         memset(key_temp, '\0', MAX_INPUT_LENGTH);
+        char key_temp[MAX_INPUT_LENGTH];
+        memset(key_temp, '\0', MAX_INPUT_LENGTH);
 
-         strcpy(key_temp, tokens[1]);
+        strcpy(key_temp, tokens[1]);
 
         add_replace(aliases, key_temp, &tokens[2]);
         printf("create an alias\n");    // TODO: Remove output
@@ -263,6 +265,7 @@ char** check_alias(char** tokens, AList aliases) {
         free(tokens);
 
         return NULL;
+
 
     }
      else if(strcmp(tokens[0],"alias")==0 && tokens[1]==NULL)
@@ -299,12 +302,23 @@ char** check_alias(char** tokens, AList aliases) {
 int save_aliases(AList aliases) {
     Alias* current = *aliases;
     char *filepath = malloc(sizeof(char) * MAX_INPUT_LENGTH);
+    memset(filepath, '\0', MAX_INPUT_LENGTH);
+
     strcpy(filepath, getenv("HOME"));
     strcat(filepath, "/.aliases");
     FILE *file = fopen(filepath, "w+");
 
     while(current!=NULL){
-        fprintf(file, "%s %s\n", current->key, current->value); // writes key and the corresponding alias to file
+        char temp_key[MAX_INPUT_LENGTH];
+        char temp_value[MAX_INPUT_LENGTH];
+
+        memset(temp_key, '\0', MAX_INPUT_LENGTH);
+        memset(temp_value, '\0', MAX_INPUT_LENGTH);
+
+        strcpy(temp_key, current->key);
+        strcpy(temp_value, current->value);
+
+        fprintf(file, "%s %s\n", temp_key, temp_value); // writes key and the corresponding alias to file
         current = current->next;
     }
 
@@ -405,9 +419,7 @@ char* getvalue(char*key,AList aliases)
 }
 char** substituteAlias(char** tokens,AList aliases)
 {
-
     char temp[MAX_INPUT_LENGTH];
-    memset(temp, '\0', MAX_INPUT_LENGTH);
     int index=0;
     while (tokens[index]!=NULL)
     {
@@ -416,11 +428,32 @@ char** substituteAlias(char** tokens,AList aliases)
             return tokens;
         }
         if (getvalue(tokens[index],aliases)!=NULL) {
-            strcat(temp, getvalue(tokens[index], aliases));
+            char copy[MAX_INPUT_LENGTH];
+
+            strcpy(copy, getvalue(tokens[index], aliases));
+
+            if(index == 0) {
+                strcpy(temp, copy);
+            }
+            else{
+                strcat(temp, copy);
+            }
+
         }
         else{
-            strcat(temp,tokens[index]);
+            char copy[MAX_INPUT_LENGTH];
+
+            strcpy(copy, tokens[index]);
+
+            if(index == 0) {
+                strcpy(temp, copy);
+            }
+            else{
+                strcat(temp, copy);
+            }
+
         }
+
         strcat(temp, " ");
 
         index++;
@@ -429,6 +462,7 @@ char** substituteAlias(char** tokens,AList aliases)
     char final[MAX_INPUT_LENGTH];
     memset(final, '\0', MAX_INPUT_LENGTH);
     strcpy(final, temp);
+    memset(temp, '\0', MAX_INPUT_LENGTH);
 
     return tokenise(final);
 }

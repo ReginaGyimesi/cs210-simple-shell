@@ -110,8 +110,7 @@ char** exec_number_history(int number, char* history[], int *front) {
         }
 
         if(*history[i] != '\0'){                            // Copying and tokenizing the history command
-            char line[MAX_INPUT_LENGTH];
-            memset(line, '\0', MAX_INPUT_LENGTH);
+            char line[MAX_INPUT_LENGTH] = {'\0'};
             strcpy(line, history[i]);
             char** tokens = tokenise(line);
 
@@ -147,9 +146,7 @@ char** exec_minus_number_history(int number, char* history[], int *last) {
         }
 
         if(*history[i] != '\0'){                            // Copying and tokenizing the history command
-            char line[MAX_INPUT_LENGTH];
-            memset(line, '\0', MAX_INPUT_LENGTH);
-
+            char line[MAX_INPUT_LENGTH] = {'\0'};
             strcpy(line, history[i]);
 
             char** tokens = tokenise(line);
