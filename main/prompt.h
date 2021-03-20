@@ -20,6 +20,7 @@ char* read_input() {
     //static char input[514];
     char* input = malloc(sizeof(char)*MAX_INPUT_LENGTH);
     fgets(input, MAX_INPUT_LENGTH, stdin);
+
     if(input==NULL || *input == '\0')		//Ctr-D detected
     {
         return NULL;

@@ -21,7 +21,7 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
             "history"
     };
 
-    int (*builtin_func[]) (char **, char**, int*, int*) = {
+    int (*builtin_func[]) (char **, char**, const int*, const int*) = {
             &exit1,
             &getpath,
             &setpath,
@@ -62,12 +62,11 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
         }
 
         if(tokens!=NULL){
+
             for (int i = 0; i < COMMANDS_LENGTH; ++i) {
                 if (strcmp(tokens[0], builtin_str[i]) == 0) //checking if the input is an inbuilt function and if so calling it
                     return (*builtin_func[i])(tokens, history, front, rear);                         // with the arguments provided with it
             }
-
-
 
             //else creating a Unix call and passing in the tokenized the arguments
 
@@ -77,16 +76,7 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
             if(pid<0)
             {
                 printf("Fork failed");
-
-                int n_tokens;
-                for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-                for(int j = 0; j < n_tokens; ++j){
-                    free(tokens[j]);
-                }
-
-                free(tokens);;
-
+                free_tokens(tokens);
                 return TRUE;
             }
             else if(pid==0)
@@ -98,29 +88,12 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
                 fprintf(stderr, "%s", tokens[0]);
                 perror(" is not a valid command");
 
-                int n_tokens;
-                for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-                for(int j = 0; j < n_tokens; ++j){
-                    free(tokens[j]);
-                }
-
-                free(tokens);
-
+                free_tokens(tokens);
                 exit(EXIT_FAILURE);
             }
             else{
                 wait(NULL);
-
-                int n_tokens;
-                for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-                for(int j = 0; j < n_tokens; ++j){
-                    free(tokens[j]);
-                }
-
-                free(tokens);
-
+                free_tokens(tokens);
                 return TRUE;
             }
         }

@@ -9,6 +9,7 @@
 
 #endif //CS210_SIMPLE_SHELL_HISTORY_HANDLER_H
 
+
 int number_of_elements_in_history(char* history[]){
 
     if(history == NULL){
@@ -35,7 +36,6 @@ void free_history(char** dest) {
     for (int k = 0; k < HISTORY_SIZE; k++) {
         free(dest[k]);
     }
-
     dest = NULL;
 }
 
@@ -50,7 +50,7 @@ int is_history_empty(char** history){
     return TRUE;
 }
 
-int is_history_full(int* front, int *rear){
+int is_history_full(const int* front, const int *rear){
     // The array is full if:
     //      - the rear is the last available position
     //      - the rear and the front%HISTORY_SIZE are the same, the two flags are at the same position in the array
@@ -99,7 +99,7 @@ int add_to_history(char* input, char* history[], int* front, int *rear) {
     return TRUE;
 }
 
-char** exec_number_history(int number, char* history[], int *front) {
+char** exec_number_history(int number, char* history[], const int *front) {
 
     int temp = 0;
     int i;
@@ -133,7 +133,7 @@ char** exec_number_history(int number, char* history[], int *front) {
     return NULL;
 }
 
-char** exec_minus_number_history(int number, char* history[], int *last) {
+char** exec_minus_number_history(int number, char* history[], const int *last) {
 
     int temp = 0;
     int i;
@@ -205,21 +205,14 @@ char** exec_recent_history(char* history[],int *last) {
 /*
 * Prints all commands stored in history
 */
-int print_history(char** tokens, char* history[],int* front, int* rear) {
+int print_history(char** tokens, char* history[], const int* front, const int* rear) {
 
     int number_printed = 0;         // for bug fixing
 
     if(history == NULL || *history == NULL || tokens[1] != NULL){
         fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
 
-        int n_tokens;
-        for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-        for(int j = 0; j < n_tokens; ++j){
-            free(tokens[j]);
-        }
-
-        free(tokens);
+        free_tokens(tokens);
 
         return ERROR;
     }
@@ -233,50 +226,28 @@ int print_history(char** tokens, char* history[],int* front, int* rear) {
             }
 
             if(number_printed == HISTORY_SIZE){
-                int n_tokens;
-                for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-                for(int j = 0; j < n_tokens; ++j){
-                    free(tokens[j]);
-                }
-
-                free(tokens);
-
+                free_tokens(tokens);
                 return TRUE;
             }
 
-            printf("%d. %s", index++, history[i]);
+            printf("%d. %s", index, history[i]);
+            ++index;
 
             number_printed++;
         }
 
         if(number_printed<HISTORY_SIZE){
-            printf("%d. %s", index++, history[i]);
+            printf("%d. %s", index, history[i]);
+            ++index;
         }
 
-        int n_tokens;
-        for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-        for(int j = 0; j < n_tokens; ++j){
-            free(tokens[j]);
-        }
-
-        free(tokens);
-
+        free_tokens(tokens);
         return TRUE;
     }
 
     fprintf(stderr, "No commands stored in history\n");
 
-    int n_tokens;
-    for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-    for(int j = 0; j < n_tokens; ++j){
-        free(tokens[j]);
-    }
-
-    free(tokens);
-
+    free_tokens(tokens);
     return ERROR;
 }
 
@@ -292,42 +263,22 @@ char** check_history_type(char** tokens, char** history, int* front, int* last){
     if(first_token[0] == '!'){                                  // checking string chars one-by-one
         if(first_token[1] == '!' && first_token[2] == '\0'){
 
-            int n_tokens;
-            for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-            for(int j = 0; j < n_tokens; ++j){
-                free(tokens[j]);
-            }
-
-            free(tokens);
+            free_tokens(tokens);
 
             return exec_recent_history(history,last);
         }
         else if(first_token[1] == '-'){
             int number = convert_number_to_int(tokens[0]);
 
-            int n_tokens;
-            for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-            for(int j = 0; j < n_tokens; ++j){
-                free(tokens[j]);
-            }
-
-            free(tokens);
+            free_tokens(tokens);
 
             return exec_minus_number_history(number, history, last);
+
         }
         else if(first_token[1] >= '0' && first_token[1] <= '9'){
             int number = convert_number_to_int(tokens[0]);
 
-            int n_tokens;
-            for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-            for(int j = 0; j < n_tokens; ++j){
-                free(tokens[j]);
-            }
-
-            free(tokens);
+            free_tokens(tokens);
 
             return  exec_number_history(number, history, front);
         }
@@ -338,28 +289,14 @@ char** check_history_type(char** tokens, char** history, int* front, int* last){
             *last = -1;
             printf("History has been reset!\n");
 
-            int n_tokens;
-            for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-            for(int j = 0; j < n_tokens; ++j){
-                free(tokens[j]);
-            }
-
-            free(tokens);
+            free_tokens(tokens);
 
             return NULL;
         }
         else{
             fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
 
-            int n_tokens;
-            for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-            for(int j = 0; j < n_tokens; ++j){
-                free(tokens[j]);
-            }
-
-            free(tokens);
+            free_tokens(tokens);
 
             return NULL;
         }
@@ -375,7 +312,7 @@ char** check_history_type(char** tokens, char** history, int* front, int* last){
  * Creates or opens .hist_list file, saves every line of history to it and closes
  * when there is no more to write.
  */
-int save_history(char* history[], int* front, int* rear) {
+int save_history(char* history[], const int* front, const int* rear) {
     int number_printed = 0;         // for bug fixing
     int i;
 

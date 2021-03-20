@@ -25,17 +25,15 @@ AList new_list()
     return temp;
 }
 
-int size_of_tokens(char** tokens){
-    int size = 0;
-    int i;
-    for(i = 0; tokens[i] != NULL; ++i){
-        char* temp = tokens[i];
-        for(int j = 0; temp[j] != '\0'; ++j){
-            size++;
-        }
+void free_tokens(char** tokens){
+    int n_tokens;
+    for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+    for(int j = 0; j < n_tokens; ++j){
+        free(tokens[j]);
     }
 
-    return size+i+1;
+    free(tokens);
 }
 
 char* detokenize(char** tokens, char* value){
@@ -206,135 +204,52 @@ int delete_alias(AList l, char*key)
     return -1;
 }
 
-char** get_key_from_tokens(char** tokens, AList aliases, int* is_new){
-
-    Alias* curr = *aliases;
-
-    if(curr == NULL){
-        *is_new = FALSE;
-        return tokens;
-    }
-
-    while(curr!=NULL){
-        if(strcmp(curr->key, tokens[0]) == 0){
-            *is_new = TRUE;
-
-            char temp[MAX_INPUT_LENGTH];
-            memset(temp, '\0', MAX_INPUT_LENGTH);
-            strcpy(temp, curr->value);
-
-            free(tokens);
-
-            return tokenise(temp);
-        }
-        curr = curr->next;
-    }
-
-    *is_new = FALSE;
-    return tokens;
-}
-
 char** check_alias(char** tokens, AList aliases) {
 
     if(tokens == NULL || *tokens == NULL){
         fprintf(stderr, "Invalid tokens or no aliases\n");
-        int n_tokens;
-        for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-        for(int j = 0; j < n_tokens; ++j){
-            free(tokens[j]);
-        }
-
-        free(tokens);
+        free_tokens(tokens);
         return NULL;
     }
 
     if(tokens[1] != NULL && tokens[2] != NULL && strcmp(tokens[2],"")==0 && strcmp(tokens[2],"alias")==0){
         fprintf(stderr, "Invalid tokens or no aliases\n");
-        int n_tokens;
-        for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-        for(int j = 0; j < n_tokens; ++j){
-            free(tokens[j]);
-        }
-
-        free(tokens);
+        free_tokens(tokens);
         return NULL;
     }
 
     if(strcmp(tokens[0],"alias")==0 && tokens[1]!=NULL && strcmp(tokens[1], "") != 0 && (tokens[2]==NULL || strcmp(tokens[2], "") == 0)){
         fprintf(stderr, "Alias needs 2 parameters, only 1 was given\n");
-        int n_tokens;
-        for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-        for(int j = 0; j < n_tokens; ++j){
-            free(tokens[j]);
-        }
-
-        free(tokens);
+        free_tokens(tokens);
         return NULL;
     }
 
      if(strcmp(tokens[0],"alias")==0 && tokens[1]!=NULL && tokens[2]!=NULL)
     {
-         char key_temp[MAX_INPUT_LENGTH];
-         memset(key_temp, '\0', MAX_INPUT_LENGTH);
+        char key_temp[MAX_INPUT_LENGTH];
+        memset(key_temp, '\0', MAX_INPUT_LENGTH);
+        strcpy(key_temp, tokens[1]);
 
-         strcpy(key_temp, tokens[1]);
+        add_replace(aliases, key_temp, &tokens[2]);
 
-         add_replace(aliases, key_temp, &tokens[2]);
-
-        int n_tokens;
-        for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-        for(int j = 0; j < n_tokens; ++j){
-            free(tokens[j]);
-        }
-
-        free(tokens);
-
-        printf("create an alias\n");    // TODO: Remove output
-
+        free_tokens(tokens);
         return NULL;
-
 
     }
      else if(strcmp(tokens[0],"alias")==0 && (tokens[1]==NULL || (strcmp(tokens[1], "") == 0)))
     {
         print_alias(aliases);
-
-        int n_tokens;
-        for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-        for(int j = 0; j < n_tokens; ++j){
-            free(tokens[j]);
-        }
-
-        free(tokens);
-
+        free_tokens(tokens);
         return NULL;
     }
-    else if (strcmp(tokens[0],"unalias")==0 && tokens[1]!=NULL && tokens[2]==NULL)
+     else if (strcmp(tokens[0],"unalias")==0 && tokens[1]!=NULL && tokens[2]==NULL)
     {
         delete_alias(aliases,tokens[1]);
-
-        int n_tokens;
-        for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
-
-        for(int j = 0; j < n_tokens; ++j){
-            free(tokens[j]);
-        }
-
-        free(tokens);
-
+        free_tokens(tokens);
         return NULL;
     }
-    else{
-         for(int j = 0; j < MAX_INPUT_LENGTH; ++j){
-             free(tokens[j]);
-         }
-         free(tokens);
-
+     else{
+        free_tokens(tokens);
         return NULL;
     }
 
@@ -413,7 +328,7 @@ int load_aliases(AList aliases) {
 
             add_alias(aliases, key, value);
         }
-    } // Otherewise adds alias grabbed from each line
+    } // Other wise adds alias grabbed from each line
 
     fclose(file);
     free(filepath);
