@@ -9,9 +9,16 @@
 
 #endif //CS210_SIMPLE_SHELL_HISTORY_HANDLER_H
 
-int number_of_elements_in_history(char** history){
+int number_of_elements_in_history(char* history[]){
+
+    if(history == NULL){
+        return 0;
+    }
+
     int i;
-    for(i = 0; strcmp(history[i], "") != 0; ++i){}
+    for(i = 0; i < HISTORY_SIZE && history[i] != NULL && strcmp(history[i], "") != 0;){
+        ++i;
+    }
 
     return i;
 }
@@ -19,8 +26,8 @@ int number_of_elements_in_history(char** history){
 void make_history(char** dest) {
 
     for (int k = 0; k < HISTORY_SIZE; k++) {
-        dest[k] = malloc(sizeof(char) * MAX_INPUT_LENGTH);
-        dest[k][0] = '\0';
+        dest[k] = (char *) malloc(sizeof(char) * MAX_INPUT_LENGTH);
+        memset(dest[k], '\0', MAX_INPUT_LENGTH);
     }
 }
 
@@ -70,14 +77,17 @@ int add_to_history(char* input, char* history[], int* front, int *rear) {
     if(*front == -1){                                   // First element
         *front = 0;
         *rear = 0;
+        memset(history[*rear], '\0', MAX_INPUT_LENGTH);
         strcpy(history[*rear], input);
     }
     else if(*rear == HISTORY_SIZE-1 && *front != 0){    // Rear reached the end, reset to the first element
         *rear = 0;
+        memset(history[*rear], '\0', MAX_INPUT_LENGTH);
         strcpy(history[*rear], input);
     }
     else{                                               // Rear is somewhere between the first and last position
         *rear += 1;
+        memset(history[*rear], '\0', MAX_INPUT_LENGTH);
         strcpy(history[*rear], input);
     }
 
@@ -112,9 +122,7 @@ char** exec_number_history(int number, char* history[], int *front) {
         if(*history[i] != '\0'){                            // Copying and tokenizing the history command
             char line[MAX_INPUT_LENGTH] = {'\0'};
             strcpy(line, history[i]);
-            char** tokens = tokenise(line);
-
-            return tokens;
+            return tokeniseString(line);
         }
     }
 
@@ -148,9 +156,7 @@ char** exec_minus_number_history(int number, char* history[], int *last) {
         if(*history[i] != '\0'){                            // Copying and tokenizing the history command
             char line[MAX_INPUT_LENGTH] = {'\0'};
             strcpy(line, history[i]);
-
-            char** tokens = tokenise(line);
-            return tokens;
+            return tokeniseString(line);
         }
     }
 
@@ -205,6 +211,16 @@ int print_history(char** tokens, char* history[],int* front, int* rear) {
 
     if(history == NULL || *history == NULL || tokens[1] != NULL){
         fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
+
+        int n_tokens;
+        for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+        for(int j = 0; j < n_tokens; ++j){
+            free(tokens[j]);
+        }
+
+        free(tokens);
+
         return ERROR;
     }
 
@@ -217,6 +233,15 @@ int print_history(char** tokens, char* history[],int* front, int* rear) {
             }
 
             if(number_printed == HISTORY_SIZE){
+                int n_tokens;
+                for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+                for(int j = 0; j < n_tokens; ++j){
+                    free(tokens[j]);
+                }
+
+                free(tokens);
+
                 return TRUE;
             }
 
@@ -229,11 +254,29 @@ int print_history(char** tokens, char* history[],int* front, int* rear) {
             printf("%d. %s", index++, history[i]);
         }
 
+        int n_tokens;
+        for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+        for(int j = 0; j < n_tokens; ++j){
+            free(tokens[j]);
+        }
+
+        free(tokens);
 
         return TRUE;
     }
 
     fprintf(stderr, "No commands stored in history\n");
+
+    int n_tokens;
+    for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+    for(int j = 0; j < n_tokens; ++j){
+        free(tokens[j]);
+    }
+
+    free(tokens);
+
     return ERROR;
 }
 
@@ -249,6 +292,13 @@ char** check_history_type(char** tokens, char** history, int* front, int* last){
     if(first_token[0] == '!'){                                  // checking string chars one-by-one
         if(first_token[1] == '!' && first_token[2] == '\0'){
 
+            int n_tokens;
+            for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+            for(int j = 0; j < n_tokens; ++j){
+                free(tokens[j]);
+            }
+
             free(tokens);
 
             return exec_recent_history(history,last);
@@ -256,12 +306,26 @@ char** check_history_type(char** tokens, char** history, int* front, int* last){
         else if(first_token[1] == '-'){
             int number = convert_number_to_int(tokens[0]);
 
+            int n_tokens;
+            for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+            for(int j = 0; j < n_tokens; ++j){
+                free(tokens[j]);
+            }
+
             free(tokens);
 
             return exec_minus_number_history(number, history, last);
         }
         else if(first_token[1] >= '0' && first_token[1] <= '9'){
             int number = convert_number_to_int(tokens[0]);
+
+            int n_tokens;
+            for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+            for(int j = 0; j < n_tokens; ++j){
+                free(tokens[j]);
+            }
 
             free(tokens);
 
@@ -274,12 +338,29 @@ char** check_history_type(char** tokens, char** history, int* front, int* last){
             *last = -1;
             printf("History has been reset!\n");
 
+            int n_tokens;
+            for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+            for(int j = 0; j < n_tokens; ++j){
+                free(tokens[j]);
+            }
+
             free(tokens);
 
             return NULL;
         }
         else{
             fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
+
+            int n_tokens;
+            for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+            for(int j = 0; j < n_tokens; ++j){
+                free(tokens[j]);
+            }
+
+            free(tokens);
+
             return NULL;
         }
 
@@ -309,6 +390,8 @@ int save_history(char* history[], int* front, int* rear) {
         }
 
         if(number_printed == HISTORY_SIZE){
+            fclose(file);
+            free(filepath);
             return TRUE;
         }
 
@@ -344,6 +427,8 @@ int load_history(char* history[],int* front, int* rear) {
 
     if(!file) {
         fprintf(stderr, "History file could not be located\n");
+
+        free(filepath);
         return ERROR;
     }
     else {

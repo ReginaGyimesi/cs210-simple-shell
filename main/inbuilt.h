@@ -30,14 +30,44 @@ int change_directory(char** tokens, char** history, int* front, int* rear) {
         if (chdir(getenv("HOME")) != 0) {
             printf("%s", getenv("HOME"));
             perror("Failed to change HOME, maybe it does not exist?");
+
+            int n_tokens;
+            for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+            for(int j = 0; j < n_tokens; ++j){
+                free(tokens[j]);
+            }
+
+            free(tokens);
+
             return ERROR;
         }
         printf("Changed directory to HOME\n");
+
+        int n_tokens;
+        for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+        for(int j = 0; j < n_tokens; ++j){
+            free(tokens[j]);
+        }
+
+        free(tokens);
+
         return TRUE;
     }
     
     if (tokens[2] != NULL) {
         fprintf(stderr, "Too many arguments. Use case: cd [path/to/directory]\n");
+
+        int n_tokens;
+        for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+        for(int j = 0; j < n_tokens; ++j){
+            free(tokens[j]);
+        }
+
+        free(tokens);
+
         return ERROR;
     }
     
@@ -50,6 +80,13 @@ int change_directory(char** tokens, char** history, int* front, int* rear) {
             perror(s);
             free(s);
 
+            int n_tokens;
+            for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+            for(int j = 0; j < n_tokens; ++j){
+                free(tokens[j]);
+            }
+
             free(tokens);
 
             return ERROR;
@@ -60,9 +97,13 @@ int change_directory(char** tokens, char** history, int* front, int* rear) {
             if (getcwd(cwd, sizeof(cwd)) == NULL) {
                 perror("getcwd() error");
 
-                for(int i = 0; tokens[i] != NULL; ++i){
-                    free(tokens[i]);
+                int n_tokens;
+                for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+                for(int j = 0; j < n_tokens; ++j){
+                    free(tokens[j]);
                 }
+
                 free(tokens);
 
                 return ERROR;
@@ -76,6 +117,13 @@ int change_directory(char** tokens, char** history, int* front, int* rear) {
 
             free(new_dir);
         }
+    }
+
+    int n_tokens;
+    for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+    for(int j = 0; j < n_tokens; ++j){
+        free(tokens[j]);
     }
 
     free(tokens);
@@ -94,6 +142,12 @@ int getpath(char** tokens, char** history, int* front, int* rear)
         const char *s = getenv("PATH");
         printf("PATH is currently set to :%s\n", (s != NULL) ? s : "getenv returned NULL");
 
+        int n_tokens;
+        for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+        for(int j = 0; j < n_tokens; ++j){
+            free(tokens[j]);
+        }
 
         free(tokens);
 
@@ -101,6 +155,13 @@ int getpath(char** tokens, char** history, int* front, int* rear)
     }
     else{
         fprintf(stderr, "Invalid number of parameters for getpath\n");
+
+        int n_tokens;
+        for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+        for(int j = 0; j < n_tokens; ++j){
+            free(tokens[j]);
+        }
 
         free(tokens);
 
@@ -115,6 +176,13 @@ int setpath(char** tokens, char** history, int* front, int* rear)
     if(tokens[1]==NULL||tokens[2]!=NULL)
     {
         fprintf(stderr, "Invalid number of parameters for setpath\n");
+
+        int n_tokens;
+        for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+        for(int j = 0; j < n_tokens; ++j){
+            free(tokens[j]);
+        }
 
         free(tokens);
 
@@ -138,6 +206,18 @@ int setpath(char** tokens, char** history, int* front, int* rear)
         else if(ENOENT==errno)
         {
             printf("The directory %s is not a valid PATH\n",isDir);
+
+            int n_tokens;
+            for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+            for(int j = 0; j < n_tokens; ++j){
+                free(tokens[j]);
+            }
+
+            free(tokens);
+
+            free(dir);
+
             return -1;
         }
 
@@ -155,7 +235,13 @@ int setpath(char** tokens, char** history, int* front, int* rear)
     setenv("PATH",path,1);
     free(isDir);
 
-    free(tokens[0]);
+    int n_tokens;
+    for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+    for(int j = 0; j < n_tokens; ++j){
+        free(tokens[j]);
+    }
+
     free(tokens);
 
     return TRUE;

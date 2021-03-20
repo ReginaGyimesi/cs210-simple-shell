@@ -26,6 +26,7 @@
 #include <sys/wait.h>
 #include <dirent.h>
 #include <errno.h>
+#include <ctype.h>
 
 #include "tokenise.h"
 #include "alias_handler_clean.h"

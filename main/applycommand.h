@@ -39,7 +39,6 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
     }
 
     if(*tokens[0] == '\0'){ //if the first input is null or a NULL char, then we return 0 thus indicating it is an exit
-        free(*tokens);
         free(tokens);
         return FALSE;
     }
@@ -79,15 +78,32 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
             {
                 printf("Fork failed");
 
-                free(tokens);
+                int n_tokens;
+                for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+                for(int j = 0; j < n_tokens; ++j){
+                    free(tokens[j]);
+                }
+
+                free(tokens);;
 
                 return TRUE;
             }
             else if(pid==0)
             {
-                execvp(tokens[0],tokens);
+                char temp[MAX_INPUT_LENGTH] = {'\0'};
+                strcpy(temp, tokens[0]);
+
+                execvp(temp,tokens);
                 fprintf(stderr, "%s", tokens[0]);
                 perror(" is not a valid command");
+
+                int n_tokens;
+                for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+                for(int j = 0; j < n_tokens; ++j){
+                    free(tokens[j]);
+                }
 
                 free(tokens);
 
@@ -95,14 +111,21 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
             }
             else{
                 wait(NULL);
+
+                int n_tokens;
+                for(n_tokens = 0; tokens[n_tokens] != NULL; ++n_tokens){}
+
+                for(int j = 0; j < n_tokens; ++j){
+                    free(tokens[j]);
+                }
+
                 free(tokens);
+
                 return TRUE;
             }
         }
 
     }
-
-    free(tokens);
 
     return TRUE;
 
