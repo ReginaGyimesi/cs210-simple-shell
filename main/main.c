@@ -1,9 +1,6 @@
 //
 // Created by Zoltan Kiss on 27/01/2021.
 //
-
-
-#define CS210_SIMPLE_SHELL_MAIN_H
 #define TRUE 1
 #define FALSE 0
 #define ERROR (-1)
