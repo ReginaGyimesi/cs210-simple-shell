@@ -25,8 +25,9 @@ int main()
 
         print_prompt();
         line = read_input();
-        if (line != NULL && line[0] != '\0' && line[0] != '\n' && line[0] != '!')
-            add_to_history(line, history, &front, &rear);
+
+//        if (line != NULL && line[0] != '\0' && line[0] != '\n' && line[0] != '!')
+//            add_to_history(line, history, &front, &rear);
 
         args = tokeniseString(line);
 

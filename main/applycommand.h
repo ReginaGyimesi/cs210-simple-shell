@@ -45,16 +45,28 @@ int apply_command(char** tokens, char** history,int* front, int* rear, AList ali
     else
     {
 
+        char* history_line = malloc(sizeof(char) * MAX_INPUT_LENGTH);
+        memset(history_line, '\0', MAX_INPUT_LENGTH);
+        detokenize(tokens, history_line);
+
+        for(int i = 0; i < 20 && tokens != NULL; ++i){
+            tokens=substituteAlias(tokens,aliases);
+        }
+
+        if (tokens[0] != NULL && *(tokens[0]) != '\0' && *(tokens[0]) != '\n' && *(tokens[0]) != '!')
+            add_to_history(history_line, history, front, rear);
+        free(history_line);
+
+        if(tokens != NULL && (*tokens)[0] == '!'){
+            tokens = check_history_type(tokens, history, front, rear, aliases);
+        }
+
         for(int i = 0; i < 20 && tokens != NULL; ++i){
             tokens=substituteAlias(tokens,aliases);
         }
 
         if(tokens != NULL && (*tokens)[0] == '!'){
-            tokens = check_history_type(tokens, history, front, rear);
-        }
-
-        for(int i = 0; i < 20 && tokens != NULL; ++i){
-            tokens=substituteAlias(tokens,aliases);
+            tokens = check_history_type(tokens, history, front, rear, aliases);
         }
 
         if(tokens != NULL && (strcmp(tokens[0],"alias") == 0 || strcmp(tokens[0],"unalias") == 0)){

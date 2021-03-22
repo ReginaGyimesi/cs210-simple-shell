@@ -119,8 +119,13 @@ char** exec_number_history(int number, char* history[], const int *front) {
             i = 0;                                          // 0 if, temp becomes equal to the number and we reached the end of the array
         }
 
+        if(i == -1){                              // This is a edge case, because the loop, does not set i to
+            i = 0;                                          // 0 if, temp becomes equal to the number and we reached the end of the array
+        }
+
         if(*history[i] != '\0'){                            // Copying and tokenizing the history command
             char line[MAX_INPUT_LENGTH] = {'\0'};
+            memset(line, '\0', MAX_INPUT_LENGTH);
             strcpy(line, history[i]);
             return tokeniseString(line);
         }
@@ -133,10 +138,41 @@ char** exec_number_history(int number, char* history[], const int *front) {
     return NULL;
 }
 
-char** exec_minus_number_history(int number, char* history[], const int *last) {
+char* check_for_minus1(AList l)
+{
+    Alias* curr=*l;
+    if(curr==NULL)
+    {
+        return NULL;
+    }
+    else if(strcmp(curr->value,"!-1")==0) //if first element is what we're looking for
+    {
+        return curr->key;
+    }
+    while(curr->next!=NULL) //iterate to the end of the list
+    {
+        curr=curr->next;
+
+        if(strcmp(curr->value,"!-1")==0) //if first element is what we're looking for
+        {
+            return curr->key;
+        }
+    }
+
+    return NULL;
+}
+
+char** exec_minus_number_history(int number, char* history[], int *last, AList aliases) {
 
     int temp = 0;
     int i;
+
+    char* key_for_minus1 = check_for_minus1(aliases);
+    char* super_temp = malloc(sizeof(char)*MAX_INPUT_LENGTH);
+    if(key_for_minus1 != NULL){
+        strcpy(super_temp, key_for_minus1);
+        strcat(super_temp, "\n");
+    }
 
     number--;       // Decreasing to make it equal to array index representation
 
@@ -150,12 +186,20 @@ char** exec_minus_number_history(int number, char* history[], const int *last) {
         }
 
         if(i == -1){                              // This is a edge case, because the loop, does not set i to
-            i = HISTORY_SIZE-1;                                          // 0 if, temp becomes equal to the number and we reached the end of the array
+            i = HISTORY_SIZE-1;                   // 0 if, temp becomes equal to the number and we reached the end of the array
         }
 
         if(*history[i] != '\0'){                            // Copying and tokenizing the history command
             char line[MAX_INPUT_LENGTH] = {'\0'};
-            strcpy(line, history[i]);
+
+            if(super_temp != NULL && strcmp(history[i], super_temp) == 0){
+                strcpy(line, history[i-1]);
+            }
+            else{
+                strcpy(line, history[i]);
+            }
+
+            free(super_temp);
             return tokeniseString(line);
         }
     }
@@ -164,6 +208,7 @@ char** exec_minus_number_history(int number, char* history[], const int *last) {
     if(number >= number_of_elements_in_history(history)){
         fprintf(stderr, "Number is greater, than the number of history elements.\n");
     }
+    free(super_temp);
     return NULL;
 }
 
@@ -193,9 +238,9 @@ int convert_number_to_int(const char* text){
 /*
 * Executes the most recent command in history
 */
-char** exec_recent_history(char* history[],int *last) {
+char** exec_recent_history(char* history[],int *last, AList aliases) {
     if(*(history[0]) != '\0') {
-        return exec_minus_number_history(1, history,last);
+        return exec_minus_number_history(1, history, last, aliases);
     }
 
     fprintf(stderr, "No commands stored in recent history\n");
@@ -230,14 +275,14 @@ int print_history(char** tokens, char* history[], const int* front, const int* r
                 return TRUE;
             }
 
-            printf("%d. %s", index, history[i]);
+            printf("%d. %s\n", index, history[i]);
             ++index;
 
             number_printed++;
         }
 
         if(number_printed<HISTORY_SIZE){
-            printf("%d. %s", index, history[i]);
+            printf("%d. %s\n", index, history[i]);
             ++index;
         }
 
@@ -256,7 +301,7 @@ int print_history(char** tokens, char* history[], const int* front, const int* r
 /*
  * Function which decides what history command call
  */
-char** check_history_type(char** tokens, char** history, int* front, int* last){
+char** check_history_type(char** tokens, char** history, int* front, int* last, AList aliases){
     char first_token[10];
     strcpy(first_token, tokens[0]);                         // storing the first token as single string
 
@@ -265,14 +310,14 @@ char** check_history_type(char** tokens, char** history, int* front, int* last){
 
             free_tokens(tokens);
 
-            return exec_recent_history(history,last);
+            return exec_recent_history(history,last, aliases);
         }
         else if(first_token[1] == '-'){
             int number = convert_number_to_int(tokens[0]);
 
             free_tokens(tokens);
 
-            return exec_minus_number_history(number, history, last);
+            return exec_minus_number_history(number, history, last, aliases);
 
         }
         else if(first_token[1] >= '0' && first_token[1] <= '9'){

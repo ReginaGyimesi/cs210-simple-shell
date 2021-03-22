@@ -87,8 +87,9 @@ int change_directory(char** tokens, char** history __attribute__((unused)), cons
     return TRUE;
 }
 
-int exit1()
+int exit1(char** tokens, char** history __attribute__((unused)), const int* front __attribute__((unused)), const int* rear __attribute__((unused)))
 {
+    free_tokens(tokens);
     return FALSE;
 }
 
