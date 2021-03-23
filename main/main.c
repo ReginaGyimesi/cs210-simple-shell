@@ -88,7 +88,7 @@ char** tokeniseString(char* input) {
     n_token = 0;
     int prev_is_delim = 1;
 
-    while (*current != '\0' && n_token <= MAX_TOKENS) {
+    while (*current != '\0' && n_token < MAX_TOKENS) {
         if (*current == ' ' || *current == '\n') {
             prev_is_delim = 1;
             *current = '\0';
@@ -395,6 +395,30 @@ int save_aliases(AList aliases) {
     return 1;
 }
 
+int free_aliases(AList aliases){
+    Alias* current = *aliases;
+    Alias* prev = NULL;
+
+    if(current==NULL)
+    {
+        return -1;
+    }
+
+    while(current!=NULL){
+        prev = current;
+        current = current->next;
+
+        free(prev->key);
+        prev->key = NULL;
+        free(prev->value);
+        prev->value = NULL;
+        free(prev);
+    }
+
+    *aliases = NULL;
+
+    return 1;
+}
 
 /*
  * Opens .aliases file, reads in every line and adds to alias list.
@@ -430,6 +454,15 @@ int load_aliases(AList aliases) {
             temp[i] = '\0';
 
             key = strtok(temp, " ");
+            if(key == NULL){
+                fprintf(stderr, "Alias file is corrupt, file read stopped and aliases deleted.\n");
+                free_aliases(aliases);
+                aliases = NULL;
+                aliases = new_list();
+                free(filepath);
+                fclose(file);
+                return ERROR;
+            }
             value = temp + strlen(key) + 1;
             strcat(value, "\0");
 
@@ -440,28 +473,6 @@ int load_aliases(AList aliases) {
     fclose(file);
     free(filepath);
     return TRUE;
-}
-
-int free_aliases(AList aliases){
-    Alias* current = *aliases;
-    Alias* prev = NULL;
-
-    if(current==NULL)
-    {
-        return -1;
-    }
-
-    while(current!=NULL){
-        prev = current;
-        current = current->next;
-
-        free(prev->key);
-        free(prev->value);
-        free(prev);
-
-    }
-
-    return 1;
 }
 
 
@@ -647,7 +658,7 @@ int getpath(char** tokens, char** history __attribute__((unused)), const int* fr
         return TRUE;
     }
     else{
-        fprintf(stderr, "Invalid number of parameters for getpath\n");
+        fprintf(stderr, "Invalid number of parameters for getpath, it takes no parameters!\n");
 
         free_tokens(tokens);
 
@@ -661,7 +672,7 @@ int setpath(char** tokens, char** history __attribute__((unused)), const int* fr
 
     if(tokens[1]==NULL||tokens[2]!=NULL)
     {
-        fprintf(stderr, "Invalid number of parameters for setpath\n");
+        fprintf(stderr, "Invalid number of parameters for setpath, it takes exactly 2 parameters!\n");
 
         free_tokens(tokens);
 
@@ -669,10 +680,11 @@ int setpath(char** tokens, char** history __attribute__((unused)), const int* fr
     }
 
     char * isDir;
-    char path[100];
+    char path[MAX_INPUT_LENGTH] = {'\0'};
     const char delim[2]=":";
     isDir=strtok(tokens[1],delim);
     strcpy(path,isDir);
+    path[MAX_INPUT_LENGTH-1] = '\0';
 
     while(isDir!=NULL)
     {
@@ -698,6 +710,8 @@ int setpath(char** tokens, char** history __attribute__((unused)), const int* fr
         }
 
     }
+
+    path[MAX_INPUT_LENGTH-1] = '\0';
 
     setenv("PATH",path,1);
     free(isDir);
@@ -838,6 +852,9 @@ char** exec_number_history(int number, char* history[], const int *front) {
     if(number >= number_of_elements_in_history(history)){
         fprintf(stderr, "Number is greater, than the number of history elements.\n");
     }
+    else if(number == -1){
+        fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
+    }
     return NULL;
 }
 
@@ -865,7 +882,7 @@ char* check_for_minus1(AList l)
     return NULL;
 }
 
-char** exec_minus_number_history(int number, char* history[], int *last, AList aliases) {
+char** exec_minus_number_history(int number, char* history[], const int *last, AList aliases) {
 
     int temp = 0;
     int i;
@@ -910,6 +927,9 @@ char** exec_minus_number_history(int number, char* history[], int *last, AList a
     fprintf(stderr, "History cannot be executed\n");
     if(number >= number_of_elements_in_history(history)){
         fprintf(stderr, "Number is greater, than the number of history elements.\n");
+    }
+    else if(number == -1){
+        fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
     }
     free(super_temp);
     return NULL;
@@ -1005,17 +1025,26 @@ int print_history(char** tokens, char* history[], const int* front, const int* r
  * Function which decides what history command call
  */
 char** check_history_type(char** tokens, char** history, int* front, int* last, AList aliases){
-    char first_token[10];
-    strcpy(first_token, tokens[0]);                         // storing the first token as single string
+    char first_token[MAX_INPUT_LENGTH];
+    strcpy(first_token, tokens[0]);// storing the first token as single string
+    first_token[MAX_INPUT_LENGTH-1] = '\0';
 
     if(first_token[0] == '!'){                                  // checking string chars one-by-one
-        if(first_token[1] == '!' && first_token[2] == '\0'){
+        if(first_token[1] == '!' && first_token[2] == '\0' && tokens[1] == NULL){
 
             free_tokens(tokens);
 
             return exec_recent_history(history,last, aliases);
         }
-        else if(first_token[1] == '-'){
+        else if(first_token[1] == '-' && tokens[1] == NULL){
+
+            if(strlen(tokens[0]) > 4){
+                memset(tokens[0], '\0', MAX_INPUT_LENGTH);
+                fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
+                free_tokens(tokens);
+                return NULL;
+            }
+
             int number = convert_number_to_int(tokens[0]);
 
             free_tokens(tokens);
@@ -1023,14 +1052,21 @@ char** check_history_type(char** tokens, char** history, int* front, int* last, 
             return exec_minus_number_history(number, history, last, aliases);
 
         }
-        else if(first_token[1] >= '0' && first_token[1] <= '9'){
+        else if(first_token[1] >= '0' && first_token[1] <= '9' && tokens[1] == NULL){
+            if(strlen(tokens[0]) > 4){
+                memset(tokens[0], '\0', MAX_INPUT_LENGTH);
+                fprintf(stderr, "Invalid invocation of history. Use case: ![!][-][1-20]\n");
+                free_tokens(tokens);
+                return NULL;
+            }
+
             int number = convert_number_to_int(tokens[0]);
 
             free_tokens(tokens);
 
             return  exec_number_history(number, history, front);
         }
-        else if(strcmp(first_token, "!clear") == 0){
+        else if(strcmp(first_token, "!clear") == 0 && tokens[1] == NULL){
             free_history(history);
             make_history(history);
             *front = -1;
@@ -1052,7 +1088,6 @@ char** check_history_type(char** tokens, char** history, int* front, int* last, 
     }
 
     return tokens;
-
 
 }
 
@@ -1331,9 +1366,6 @@ int main()
 
         print_prompt();
         line = read_input();
-
-//        if (line != NULL && line[0] != '\0' && line[0] != '\n' && line[0] != '!')
-//            add_to_history(line, history, &front, &rear);
 
         args = tokeniseString(line);
 
