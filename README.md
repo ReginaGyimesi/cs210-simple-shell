@@ -1,15 +1,3 @@
-# Some cases that may cause losing marks:
-
-This was tested on ssh, on one of the Livingstone Tower's computer. 
-
- - Stage 2: command `hello` should print out an error message that says 'This command doesnt exist'
- - Stage 8: sometimes the `.aliases` save file gets corrupt, and when you input `aliases` as a command to print out the list of aliases
-            it somehow manages to add garbage to the aliases. **Cause: unknown as for (08/03/2021)**
- - Stage 9: aliasing `alias MINUS !-1` will always cause a recursive definition. As the word `MINUS` will be put into the history, before
-            the `!-1` is executed, thus making it always call itself. 
-            So: call `MINUS` -> is put into the history -> fetch `MINUS` alias, which is `!-1` -> this means to call the very last command in history
-                -> which was `MINUS` -> so it starts again.
-
 # Finalisation
 
 ## Tasks
