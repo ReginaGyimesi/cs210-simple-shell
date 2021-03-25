@@ -10,7 +10,7 @@
 #define COMMANDS_LENGTH 5
 #define DELIMITER_SIZE 8
 #define MAX_TOKENS 50
-#define MAX_DEPTH 5
+#define MAX_DEPTH 10
 
 #include <stdio.h>
 #include <stdlib.h>
