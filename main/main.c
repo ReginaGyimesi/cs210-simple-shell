@@ -25,13 +25,15 @@ int main()
 
         print_prompt();
         line = read_input();
-        if (line != NULL && line[0] != '\0' && line[0] != '\n' && line[0] != '!')
-            add_to_history(line, history, &front, &rear);
 
-        args = tokenise(line);
+//        if (line != NULL && line[0] != '\0' && line[0] != '\n' && line[0] != '!')
+//            add_to_history(line, history, &front, &rear);
+
+        args = tokeniseString(line);
 
         status = apply_command(args, history,&front, &rear,aliases);
-        args = NULL;
+
+        free(line);
     } while (status);
 
     save_aliases(aliases);

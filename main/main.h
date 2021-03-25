@@ -8,13 +8,10 @@
 #define FALSE 0
 #define ERROR (-1)
 #define HISTORY_SIZE 20
-#define NUMBER_OF_DECIMALS 10
 #define MAX_INPUT_LENGTH 514
 #define COMMANDS_LENGTH 5
 #define DELIMITER_SIZE 8
 #define MAX_TOKENS 50
-
-#define VERSION "Stage 6"
 
 #endif //CS210_SIMPLE_SHELL_MAIN_H
 
@@ -26,6 +23,7 @@
 #include <sys/wait.h>
 #include <dirent.h>
 #include <errno.h>
+#include <ctype.h>
 
 #include "tokenise.h"
 #include "alias_handler_clean.h"
